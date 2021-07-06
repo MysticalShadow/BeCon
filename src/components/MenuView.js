@@ -22,6 +22,10 @@ class MenuView extends React.Component {
         this.props.openAddCustomHabitView();
     };
 
+    handleLogHabitButtonPressed = () => {
+        this.props.openLogHabitView();
+    };
+
     render () {
         return (
             <View>
@@ -43,7 +47,10 @@ class MenuView extends React.Component {
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.menuItem}>
+                <TouchableOpacity 
+                    style={styles.menuItem}
+                    onPress={this.handleLogHabitButtonPressed}
+                >
                     <Text>
                         Log a Habit
                     </Text>

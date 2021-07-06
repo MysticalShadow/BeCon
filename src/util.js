@@ -4,10 +4,15 @@ const dummyJSON = {
     presetHabits : [
         "Do 10 pushups.",
         "Clean room for 10 mins.",
-        "Take 10 min walk outside."
+        "Take 10 min walk outside.",
+        "a",
+        "a",
+        "a",
+        "a",
     ],
     dummyStr: "dummyTest",
     userLog: ["Log1"],
+    targets: [],
     score : 10,
     customHabits : []
 };
@@ -16,11 +21,12 @@ function readUserDataFromFile () {
     return dummyJSON;
 };
 
-export function writeUserDataToDB (userLog, presetHabits, customHabits, score) {
+export function writeUserDataToDB (presetHabits, customHabits, targets, userLog, score) {
     var userData = {
-        userLog: userLog,
         presetHabits: presetHabits,
         customHabits: customHabits,
+        targets: targets,
+        userLog: userLog,
         score: score
     }
     console.log(userData);
