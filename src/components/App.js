@@ -17,8 +17,10 @@ import {
   getOngoingHabits,
   getCurrentScore
 } from '../util';
+
 import IntroView from './IntroView';
 import HomeView from './HomeView';
+import MenuView from './MenuView';
 
 class App extends React.Component {
 
@@ -29,7 +31,10 @@ class App extends React.Component {
     userLog: [],
     score: 0,
     // derived values 
-    ongoingHabits: []
+    ongoingHabits: [],
+
+    // event tracking states
+    menuOpen: false
   };
 
   componentDidMount() {
@@ -39,16 +44,39 @@ class App extends React.Component {
     // console.log(score);
     setTimeout(() => {
       this.setState({userData: data, ongoingHabits, score});
-    }, 2000);
+    }, 500);
   };
 
+  onMenuButtonPressed = () => {
+    this.setState({menuOpen: true});
+  };
+
+  onCloseMenuButtonPressed = () => {
+    this.setState({menuOpen: false});
+  };
+
+
+
   render () {
+    if(this.state.menuOpen) {
+      return (
+        <SafeAreaView style={[{flex:1}]}>
+          <StatusBar barStyle={'dark-content'} />
+          <MenuView onCloseMenuButtonPressed={this.onCloseMenuButtonPressed}/>
+        </SafeAreaView>
+      );
+    }
+
     if(this.state.userData) {
       var ongoingHabits = getOngoingHabits();
       return (
         <SafeAreaView style={[{flex:1}]}>
           <StatusBar barStyle={'dark-content'} />
-          <HomeView ongoingHabits={this.state.ongoingHabits} score={this.state.score}/>
+          <HomeView 
+            ongoingHabits={this.state.ongoingHabits} 
+            score={this.state.score}
+            onMenuButtonPressed={this.onMenuButtonPressed}
+          />
         </SafeAreaView>
       );
     }

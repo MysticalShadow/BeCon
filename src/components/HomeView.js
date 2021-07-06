@@ -19,16 +19,16 @@ class HomeView extends React.Component {
 
     };
 
+    handleMenuButtonPressed = () => {
+        this.props.onMenuButtonPressed();
+    };
+
     render () {
         const basicHabits = this.props.ongoingHabits;
         const currConsistency = this.props.score;
-        console.log(currConsistency);
         return (
-            //imgblob - opens menu
-            //current consistency score
-            //today's targets
             <View style={styles.container}>
-                <TouchableOpacity style={styles.menuButton}>
+                <TouchableOpacity style={styles.menuButton} onPress={this.handleMenuButtonPressed}>
                     <Text style={styles.menuString}> Menu </Text>
                 </TouchableOpacity>
 
