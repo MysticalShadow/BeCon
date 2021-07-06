@@ -14,38 +14,48 @@ import {
 
 class MenuView extends React.Component {
 
-    handleCloseMenu = () => {
+    handleCloseMenuButtonPressed = () => {
         this.props.onCloseMenuButtonPressed();
+    };
+
+    handleAddCustomButtonPressed = () => {
+        this.props.openAddCustomHabitView();
     };
 
     render () {
         return (
             <View>
-                <TouchableOpacity style={styles.closeButton} onPress={this.handleCloseMenu}>
+                <TouchableOpacity 
+                    style={styles.closeButton} 
+                    onPress={this.handleCloseMenuButtonPressed}
+                >
                     <Text>
                         Close
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.closeButton}>
+                <TouchableOpacity 
+                    style={styles.menuItem}
+                    onPress={this.handleAddCustomButtonPressed}
+                >
                     <Text>
                         Add a Custom Habit
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.closeButton}>
+                <TouchableOpacity style={styles.menuItem}>
                     <Text>
                         Log a Habit
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.closeButton}>
+                <TouchableOpacity style={styles.menuItem}>
                     <Text>
                         Set Consistency Target
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.closeButton}>
+                <TouchableOpacity style={styles.menuItem}>
                     <Text>
                         Reports
                     </Text>
@@ -62,10 +72,20 @@ const styles = StyleSheet.create({
         alignSelf: 'baseline',
         marginLeft: 10,
         marginTop: 20,
+        marginBottom: 20,
         borderColor: '#000',
         borderWidth: 1,
         borderRadius: 6,
         padding: 5
+    },
+    menuItem: {
+        margin: 10,
+        // marginTop: 20,
+        borderColor: '#000',
+        borderWidth: 1,
+        borderRadius: 6,
+        padding: 5,
+        width: 200
     },
 });
 

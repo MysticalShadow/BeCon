@@ -15,44 +15,61 @@ import {
 import {
   getUserData, 
   getOngoingHabits,
-  getCurrentScore
+  getCurrentScore,
+  writeUserDataToDB
 } from '../util';
 
 import IntroView from './IntroView';
 import HomeView from './HomeView';
 import MenuView from './MenuView';
+import AddCustomHabitView from './AddCustomHabit';
 
 class App extends React.Component {
 
   state = {
-    userData: undefined,
     presetHabits: [],
     customHabits: [],
     userLog: [],
     score: 0,
+    dataLoaded: false,
     // derived values 
     ongoingHabits: [],
 
-    // event tracking states
-    menuOpen: false
+    // event/view tracking states
+    menuOpen: false,
+    customHabitOpen: false,
   };
 
   componentDidMount() {
     var data = getUserData(); // load data from file here
     var ongoingHabits = getOngoingHabits(data);
-    var score = getCurrentScore();
-    // console.log(score);
+    var presetHabits = data.presetHabits;
+    var customHabits = data.customHabits;
+    var userLog = data.userLog;
+    var score = data.score;
     setTimeout(() => {
-      this.setState({userData: data, ongoingHabits, score});
+      this.setState({dataLoaded: true, ongoingHabits, presetHabits, customHabits, userLog, score});
     }, 500);
   };
 
   onMenuButtonPressed = () => {
-    this.setState({menuOpen: true});
+    this.setState({menuOpen: true, customHabitOpen: false});
   };
 
   onCloseMenuButtonPressed = () => {
     this.setState({menuOpen: false});
+  };
+
+  openAddCustomHabitView = () => {
+    this.setState({menuOpen:false, customHabitOpen: true});
+  };
+
+  onAddCustomHabitButtonPressed = (habit) => {
+    // since setState is async, we separately make new array and write
+    writeUserDataToDB(this.state.userLog, this.state.presetHabits, [...this.state.customHabits, habit], this.state.score);
+    this.setState(prevState => ({
+      customHabits: [...prevState.customHabits, habit]
+    }));
   };
 
 
@@ -62,12 +79,27 @@ class App extends React.Component {
       return (
         <SafeAreaView style={[{flex:1}]}>
           <StatusBar barStyle={'dark-content'} />
-          <MenuView onCloseMenuButtonPressed={this.onCloseMenuButtonPressed}/>
+          <MenuView 
+            onCloseMenuButtonPressed={this.onCloseMenuButtonPressed}
+            openAddCustomHabitView={this.openAddCustomHabitView}
+          />
         </SafeAreaView>
       );
     }
 
-    if(this.state.userData) {
+    if(this.state.customHabitOpen) {
+      return (
+        <SafeAreaView style={[{flex:1}]}>
+          <StatusBar barStyle={'dark-content'} />
+          <AddCustomHabitView 
+            onBackButtonPressed={this.onMenuButtonPressed}
+            onAddCustomHabitButtonPressed={this.onAddCustomHabitButtonPressed}
+          />
+        </SafeAreaView>
+      );
+    }
+
+    if(this.state.dataLoaded) {
       var ongoingHabits = getOngoingHabits();
       return (
         <SafeAreaView style={[{flex:1}]}>

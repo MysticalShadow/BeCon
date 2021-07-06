@@ -8,11 +8,27 @@ const dummyJSON = {
     ],
     dummyStr: "dummyTest",
     userLog: ["Log1"],
-    score : 10
+    score : 10,
+    customHabits : []
+};
+
+function readUserDataFromFile () {
+    return dummyJSON;
+};
+
+export function writeUserDataToDB (userLog, presetHabits, customHabits, score) {
+    var userData = {
+        userLog: userLog,
+        presetHabits: presetHabits,
+        customHabits: customHabits,
+        score: score
+    }
+    console.log(userData);
+    // rnfs write
 };
 
 export function getUserData () {
-    return dummyJSON;
+    return readUserDataFromFile();
 };
 
 export function getOngoingHabits (data) {
@@ -29,3 +45,7 @@ export function getCurrentScore (data) {
     return "UNABLE TO LOAD";
 };
 
+export function addCustomHabitToDB (habit, currUserData) {
+    currUserData.customHabits.push(habit);
+    writeUserDataToDB(currUserData);
+}
