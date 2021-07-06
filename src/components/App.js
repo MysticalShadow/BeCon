@@ -1,11 +1,4 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
+import { react } from '@babel/types';
 import React from 'react';
 import {Node} from 'react';
 import {
@@ -16,64 +9,62 @@ import {
   Text,
   useColorScheme,
   View,
+  Colors
 } from 'react-native';
 
 import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+  getUserData, 
+  getOngoingHabits,
+  getCurrentScore
+} from '../util';
+import IntroView from './IntroView';
+import HomeView from './HomeView';
 
-const Section = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+class App extends React.Component {
 
-const App = () =>  {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  state = {
+    userData: undefined,
+    presetHabits: [],
+    customHabits: [],
+    userLog: [],
+    score: 0,
+    // derived values 
+    ongoingHabits: []
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle, [{flex:1}]}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <View style={styles.container}>
-        <Text style={styles.appTitle}>Be-CON</Text>
-      </View>
-    </SafeAreaView>
-  );
+  componentDidMount() {
+    var data = getUserData(); // load data from file here
+    var ongoingHabits = getOngoingHabits(data);
+    var score = getCurrentScore();
+    // console.log(score);
+    setTimeout(() => {
+      this.setState({userData: data, ongoingHabits, score});
+    }, 2000);
+  };
+
+  render () {
+    if(this.state.userData) {
+      var ongoingHabits = getOngoingHabits();
+      return (
+        <SafeAreaView style={[{flex:1}]}>
+          <StatusBar barStyle={'dark-content'} />
+          <HomeView ongoingHabits={this.state.ongoingHabits} score={this.state.score}/>
+        </SafeAreaView>
+      );
+    }
+    else {
+      return (
+        <SafeAreaView style={[{flex:1}]}>
+          <StatusBar barStyle={'dark-content'} />
+          <IntroView/>
+        </SafeAreaView>
+      );
+    }
+  };
+  
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
   container: {
     flex:1,
     justifyContent: 'center',
@@ -83,19 +74,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: '700',
     // flex:1
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
+  }
 });
 
 export default App;
