@@ -14,7 +14,7 @@ import {
 
 import {
   getUserData, 
-  getOngoingHabits,
+  getOngoingTargets,
   getCurrentScore,
   writeUserDataToDB
 } from '../util';
@@ -24,6 +24,7 @@ import HomeView from './HomeView';
 import MenuView from './MenuView';
 import AddCustomHabitView from './AddCustomHabit';
 import LogHabitView from './LogHabit';
+import SetTargetView from './SetTarget';
 
 class App extends React.Component {
 
@@ -35,29 +36,30 @@ class App extends React.Component {
     score: 0,
     dataLoaded: false,
     // derived values 
-    ongoingHabits: [],
+    ongoingTargets: [],
 
     // event/view tracking states
     menuOpen: false,
     customHabitOpen: false,
     logHabitOpen: false,
+    setTargetOpen: false
   };
 
   componentDidMount() {
     var data = getUserData(); // load data from file here
-    var ongoingHabits = getOngoingHabits(data);
+    var ongoingTargets = getOngoingTargets(data);
     var presetHabits = data.presetHabits;
     var customHabits = data.customHabits;
     var targets = data.targets;
     var userLog = data.userLog;
     var score = data.score;
     setTimeout(() => {
-      this.setState({dataLoaded: true, ongoingHabits, presetHabits, customHabits, targets, userLog, score});
+      this.setState({dataLoaded: true, ongoingTargets, presetHabits, customHabits, targets, userLog, score});
     }, 500);
   };
 
   onMenuButtonPressed = () => {
-    this.setState({menuOpen: true, customHabitOpen: false, logHabitOpen: false});
+    this.setState({menuOpen: true, customHabitOpen: false, logHabitOpen: false, setTargetOpen: false});
   };
 
   onCloseMenuButtonPressed = () => {
@@ -70,6 +72,10 @@ class App extends React.Component {
 
   openLogHabitView = () => {
     this.setState({menuOpen:false, logHabitOpen: true});
+  };
+
+  openSetTargetView = () => {
+    this.setState({menuOpen:false, setTargetOpen: true});
   };
 
   onAddCustomHabitButtonPressed = (habit) => {
@@ -88,6 +94,14 @@ class App extends React.Component {
     }));
   };
 
+  onSetTargetButtonPressed = (target) => {
+    // since setState is async, we separately make new array and write
+    writeUserDataToDB(this.state.presetHabits, this.state.customHabits, [...this.state.targets, target], this.state.userLog, this.state.score);
+    this.setState(prevState => ({
+      targets: [...prevState.targets, target]
+    }));
+  };
+
 
 
   render () {
@@ -99,6 +113,7 @@ class App extends React.Component {
             onCloseMenuButtonPressed={this.onCloseMenuButtonPressed}
             openAddCustomHabitView={this.openAddCustomHabitView}
             openLogHabitView={this.openLogHabitView}
+            openSetTargetView={this.openSetTargetView}
           />
         </SafeAreaView>
       );
@@ -130,13 +145,27 @@ class App extends React.Component {
       );
     }
 
+    if(this.state.setTargetOpen) {
+      return (
+        <SafeAreaView style={[{flex:1}]}>
+          <StatusBar barStyle={'dark-content'} />
+          <SetTargetView 
+            presetHabits={this.state.presetHabits}
+            customHabits={this.state.customHabits}
+            targets={this.state.targets}
+            onBackButtonPressed={this.onMenuButtonPressed}
+            onSetTargetButtonPressed={this.onSetTargetButtonPressed}
+          />
+        </SafeAreaView>
+      );
+    }
+
     if(this.state.dataLoaded) {
-      var ongoingHabits = getOngoingHabits();
       return (
         <SafeAreaView style={[{flex:1}]}>
           <StatusBar barStyle={'dark-content'} />
           <HomeView 
-            ongoingHabits={this.state.ongoingHabits} 
+            ongoingTargets={this.state.ongoingTargets} 
             score={this.state.score}
             onMenuButtonPressed={this.onMenuButtonPressed}
           />

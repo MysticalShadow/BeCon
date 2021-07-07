@@ -26,6 +26,10 @@ class MenuView extends React.Component {
         this.props.openLogHabitView();
     };
 
+    handleSetTargetButtonPressed = () => {
+        this.props.openSetTargetView();
+    };
+
     render () {
         return (
             <View>
@@ -56,7 +60,10 @@ class MenuView extends React.Component {
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.menuItem}>
+                <TouchableOpacity 
+                    style={styles.menuItem}
+                    onPress={this.handleSetTargetButtonPressed}
+                >
                     <Text>
                         Set Consistency Target
                     </Text>

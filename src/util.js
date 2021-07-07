@@ -4,11 +4,7 @@ const dummyJSON = {
     presetHabits : [
         "Do 10 pushups.",
         "Clean room for 10 mins.",
-        "Take 10 min walk outside.",
-        "a",
-        "a",
-        "a",
-        "a",
+        "Take 10 min walk outside."
     ],
     dummyStr: "dummyTest",
     userLog: ["Log1"],
@@ -37,12 +33,18 @@ export function getUserData () {
     return readUserDataFromFile();
 };
 
-export function getOngoingHabits (data) {
-    return [
-        "CURRENT: Do 10 pushups.",
-        "CURRENT: Clean room for 10 mins.",
-        "CURRENT: Take 10 min walk outside."
-    ];
+export function getOngoingTargets (data) {
+    var targets = data.targets;
+    var ongoingTargets = [];
+
+    for(const target of targets) {
+        var finishDate = addDaysToFormattedDate(target.duration, target.date);
+        if(compareDate(finishDate, getFormattedDate(new Date())))
+        {
+            ongoingTargets.push(target);
+        }
+    }
+    return ongoingTargets;
 };
 
 export function getCurrentScore (data) {
@@ -55,3 +57,26 @@ export function addCustomHabitToDB (habit, currUserData) {
     currUserData.customHabits.push(habit);
     writeUserDataToDB(currUserData);
 }
+
+// return true if date1 >= date 2
+export function compareDate (date1, date2) {
+    var parts = date1.split("-")
+    var date1_ =  new Date(parts[2], parts[1] - 1, parts[0]);
+    parts = date2.split("-")
+    var date2_ =  new Date(parts[2], parts[1] - 1, parts[0]);    
+    
+    return date1_ >= date2_;
+};
+
+export function getFormattedDate (date) {
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = date.getFullYear();
+    return dd+"-"+mm+"-"+yyyy;
+};
+
+export function addDaysToFormattedDate (days, date) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return getFormattedDate(result);
+};

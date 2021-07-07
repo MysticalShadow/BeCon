@@ -24,8 +24,8 @@ class HomeView extends React.Component {
     };
 
     render () {
-        const basicHabits = this.props.ongoingHabits;
         const currConsistency = this.props.score;
+        console.log(this.props.ongoingTargets);
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.menuButton} onPress={this.handleMenuButtonPressed}>
@@ -44,9 +44,9 @@ class HomeView extends React.Component {
                     </Text>
                     <FlatList 
                         style={styles.ongoingTargetList}
-                        data={basicHabits}
+                        data={this.props.ongoingTargets}
                         renderItem={({ item, index }) => (
-                            <Text style={styles.target} key={index}>- {item} </Text>
+                            <Text style={styles.target} key={index}> - {item.habit} </Text>
                         )}
                         keyExtractor={ ( item, index ) => `${index}` }
                     />

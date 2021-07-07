@@ -41,7 +41,6 @@ class LogHabitView extends React.Component {
 
     state = {
         date: new Date(),
-        habitString: "",
         habitsList: [],
         habitPickerOpen: false,
         habitPickerValue: null,
@@ -187,9 +186,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     dropdownContainer: {
-        margin: 10,
-        // marginRight: 50,
-        // maxHeight: 300
+        margin: 10
     }
 });
 
