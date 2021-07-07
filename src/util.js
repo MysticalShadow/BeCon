@@ -17,7 +17,7 @@ const dummyJSON = {
 
 async function readUserDataFromFile () {
     console.log("reading...");
-    // return dummyJSON;
+    return dummyJSON;
     try {
         return await RNFS.readFile(path, 'utf8').then( (contents) => {
             console.log(contents);
@@ -68,10 +68,59 @@ export function getOngoingTargets (targets) {
     return ongoingTargets;
 };
 
-export function getCurrentScore (data) {
-    if (data && data.score)
-        return data.score;
-    return "UNABLE TO LOAD";
+export function getCurrentScore (userLog, targets) {
+
+    if(!userLog)
+        return "UNABLE TO LOAD";
+
+    var normalScore = 0.00;
+    normalScore = userLog.length;
+    var totalConsistency = normalScore;
+    var consistencyScore = 0;
+
+    for (const target of targets) {
+        var consistentDays = 0;
+        for (var i=0; i<target.duration; i++) {
+            var dateToCheck = addDaysToFormattedDate(i, target.date);
+            for(const log of userLog)
+            {
+                if(log.habit == target.habit && log.date == dateToCheck)
+                {
+                    totalConsistency = totalConsistency+1;
+                    consistentDays = consistentDays+1;
+                    break;
+                }
+            }
+            
+        }
+        if(consistentDays == target.duration)
+        {
+            totalConsistency = totalConsistency + consistentDays * 0.02;
+        }
+        else
+        {
+            totalConsistency = totalConsistency + consistentDays * 0.01;
+        }
+    }
+
+    var startDate = getFormattedDate(new Date());
+    var todayDateUnformat = new Date();
+
+    for(const log of userLog) {
+        if(compareDate(startDate, log.date))
+            startDate = log.date;
+    }
+
+    var parts = startDate.split("-");
+    var startDateUnformat =  new Date(parts[2], parts[1] - 1, parts[0]);
+
+    const utc2 = Date.UTC(todayDateUnformat.getFullYear(), todayDateUnformat.getMonth(), todayDateUnformat.getDate());
+    const utc1 = Date.UTC(startDateUnformat.getFullYear(), startDateUnformat.getMonth(), startDateUnformat.getDate());
+    
+    var totalDays = Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24)) + 1;
+
+    consistencyScore = totalConsistency/totalDays;
+    return consistencyScore;
 };
 
 export function addCustomHabitToDB (habit, currUserData) {
@@ -81,9 +130,9 @@ export function addCustomHabitToDB (habit, currUserData) {
 
 // return true if date1 >= date 2
 export function compareDate (date1, date2) {
-    var parts = date1.split("-")
+    var parts = date1.split("-");
     var date1_ =  new Date(parts[2], parts[1] - 1, parts[0]);
-    parts = date2.split("-")
+    parts = date2.split("-");
     var date2_ =  new Date(parts[2], parts[1] - 1, parts[0]);    
     
     return date1_ >= date2_;
@@ -97,7 +146,9 @@ export function getFormattedDate (date) {
 };
 
 export function addDaysToFormattedDate (days, date) {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
+    var parts = date.split("-");
+    var result = new Date(parts[2], parts[1] - 1, parts[0]);
+    result.setDate(result.getDate() + days);    
+
     return getFormattedDate(result);
 };

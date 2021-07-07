@@ -48,13 +48,14 @@ class App extends React.Component {
 
   async componentDidMount() {
     var data = await getUserData(); // load data from file here
-    console.log(data);
     var ongoingTargets = getOngoingTargets(data.targets);
     var presetHabits = data.presetHabits;
     var customHabits = data.customHabits;
     var targets = data.targets;
     var userLog = data.userLog;
-    var score = data.score;
+    console.log(userLog);
+    console.log(targets);
+    var score = getCurrentScore(userLog, targets);
     setTimeout(() => {
       this.setState({dataLoaded: true, ongoingTargets, presetHabits, customHabits, targets, userLog, score});
     }, 500);
