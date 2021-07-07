@@ -11,8 +11,13 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
-  Easing
+  Easing,
+  Alert
 } from 'react-native';
+
+import {
+    getFormattedDate
+} from '../util';
 
 import DatePicker from 'react-native-datepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -35,12 +40,13 @@ class LogHabitView extends React.Component {
         }
     
         this.state = {
-            habitPickerItems: items
+            habitPickerItems: items,
+            date: getFormattedDate(new Date())
         };
       }
 
     state = {
-        date: new Date(),
+        date: "",
         habitsList: [],
         habitPickerOpen: false,
         habitPickerValue: null,
@@ -57,6 +63,21 @@ class LogHabitView extends React.Component {
             date: this.state.date
         };
         this.props.onLogHabitButtonPressed(logItem);
+        Alert.alert(
+            "Habit Logged!!",
+            "Good Job! Keep going!",
+            [
+              {
+                text: "OK",
+                onPress: () => {},
+              },
+            ],
+            { cancelable: false }
+          );
+        this.setState({
+            habitPickerValue: null,
+            date: getFormattedDate(new Date())
+        });
     };
 
     setOpen = (habitPickerOpen) => {
@@ -121,7 +142,6 @@ class LogHabitView extends React.Component {
                         },
                     }}
                     onDateChange={(date) => {
-                        console.log(date);
                         this.setState({date});
                     }}
                 />

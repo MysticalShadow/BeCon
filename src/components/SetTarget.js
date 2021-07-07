@@ -41,7 +41,8 @@ class SetTargetView extends React.Component {
         this.allHabits = items;
     
         this.state = {
-            habitPickerItems: items
+            habitPickerItems: items,
+            date: new Date()
         };
     };
 
@@ -118,6 +119,7 @@ class SetTargetView extends React.Component {
     };
 
     setOpen = (habitPickerOpen) => {
+        this.inputElement.blur();
         this.setState({
           habitPickerOpen
         });
@@ -201,7 +203,7 @@ class SetTargetView extends React.Component {
 
                 <View style={{flexDirection:'row', alignItems:'center'}}>
                     <Text>Target Habit: </Text>
-                    <View style={{flex:1, alignItems:'center'}}>
+                    <View style={{ alignItems:'center'}}>
                         <View style={styles.dropdownContainer}>
                             <DropDownPicker
                                 open={this.state.habitPickerOpen}
@@ -215,14 +217,16 @@ class SetTargetView extends React.Component {
                     </View>
                 </View>
 
-                <TouchableOpacity 
-                    style={styles.setTargetButton}
-                    onPress={this.handleSetTargetButtonPressed}
-                >
-                    <Text style={{fontSize: 16}}>
-                        Set Target
-                    </Text>
-                </TouchableOpacity>
+                <View style={{alignItems:'center', elevation: -1}}>
+                    <TouchableOpacity 
+                        style={styles.setTargetButton}
+                        onPress={this.handleSetTargetButtonPressed}
+                    >
+                        <Text style={{fontSize: 16}}>
+                            Set Target
+                        </Text>
+                    </TouchableOpacity>
+                </View>
 
 
             </View>
@@ -254,7 +258,7 @@ const styles = StyleSheet.create({
     },
     dropdownContainer: {
         margin: 10,
-        width: 300
+        width: 300,
     },
     setTargetButton: {
         alignSelf: 'center',
@@ -264,7 +268,7 @@ const styles = StyleSheet.create({
         borderColor: '#000',
         borderWidth: 1,
         borderRadius: 63,
-        padding: 7
+        padding: 7,
     },
 });
 

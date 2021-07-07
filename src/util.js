@@ -9,20 +9,24 @@ const dummyJSON = {
         "Clean room for 10 mins.",
         "Take 10 min walk outside."
     ],
-    dummyStr: "dummyTest",
-    userLog: ["Log1"],
+    userLog: [],
     targets: [],
-    score : 10,
+    score : 0,
     customHabits : []
 };
 
 async function readUserDataFromFile () {
     console.log("reading...");
-    return await RNFS.readFile(path, 'utf8').then( (contents) => {
-        // console.log(contents[177]);
-        return JSON.parse(contents);
-    });
     // return dummyJSON;
+    try {
+        return await RNFS.readFile(path, 'utf8').then( (contents) => {
+            console.log(contents);
+            return JSON.parse(contents);
+        });
+    }
+    catch {
+        return dummyJSON;
+    }
 };
 
 export async function writeUserDataToDB (presetHabits, customHabits, targets, userLog, score) {
@@ -43,12 +47,11 @@ export async function writeUserDataToDB (presetHabits, customHabits, targets, us
         });
 };
 
-export function getUserData () {
-    return readUserDataFromFile();
+export async function getUserData () {
+    return await readUserDataFromFile();
 };
 
-export function getOngoingTargets (data) {
-    var targets = data.targets;
+export function getOngoingTargets (targets) {
     var ongoingTargets = [];
 
     for(const target of targets) {
@@ -58,6 +61,10 @@ export function getOngoingTargets (data) {
             ongoingTargets.push(target);
         }
     }
+
+    // if(ongoingTargets.length == 0)
+    //     ongoingTargets.push({habit:"", date:"--"});
+
     return ongoingTargets;
 };
 

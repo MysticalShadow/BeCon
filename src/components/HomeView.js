@@ -25,7 +25,14 @@ class HomeView extends React.Component {
 
     render () {
         const currConsistency = this.props.score;
-        console.log(this.props.ongoingTargets);
+        var emptyTargets = [];
+        if(this.props.ongoingTargets.length == 0)
+        {
+            emptyTargets.push("No targets for today!");
+            emptyTargets.push("Go in Menu to set some targets to build conistency!!");
+        }
+            
+
         return (
             <View style={styles.container}>
                 <TouchableOpacity style={styles.menuButton} onPress={this.handleMenuButtonPressed}>
@@ -37,7 +44,6 @@ class HomeView extends React.Component {
                         Current Consistency Score: {currConsistency}
                     </Text>
                 </View>
-
                 <View style={styles.ongoingTarget}>
                     <Text style={styles.challengeHeading}>
                         Today's Challenges:
@@ -50,8 +56,15 @@ class HomeView extends React.Component {
                         )}
                         keyExtractor={ ( item, index ) => `${index}` }
                     />
+                    <FlatList 
+                        style={{margin: 10}}
+                        data={emptyTargets}
+                        renderItem={({ item, index }) => (
+                            <Text style={{textAlign:'center'}} key={index}> {item} </Text>
+                        )}
+                        keyExtractor={ ( item, index ) => `${index}` }
+                    />
                 </View>
-                {/* <Text style={styles.appTitle}>HomeView</Text> */}
             </View>
         );
     }

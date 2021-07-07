@@ -49,7 +49,7 @@ class App extends React.Component {
   async componentDidMount() {
     var data = await getUserData(); // load data from file here
     console.log(data);
-    var ongoingTargets = getOngoingTargets(data);
+    var ongoingTargets = getOngoingTargets(data.targets);
     var presetHabits = data.presetHabits;
     var customHabits = data.customHabits;
     var targets = data.targets;
@@ -100,7 +100,8 @@ class App extends React.Component {
     // since setState is async, we separately make new array and write
     writeUserDataToDB(this.state.presetHabits, this.state.customHabits, [...this.state.targets, target], this.state.userLog, this.state.score);
     this.setState(prevState => ({
-      targets: [...prevState.targets, target]
+      targets: [...prevState.targets, target],
+      ongoingTargets: getOngoingTargets([...prevState.targets, target])
     }));
   };
 
