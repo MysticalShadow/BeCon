@@ -26,6 +26,7 @@ import MenuView from './MenuView';
 import AddCustomHabitView from './AddCustomHabit';
 import LogHabitView from './LogHabit';
 import SetTargetView from './SetTarget';
+import ReportsView from './ReportsView';
 
 class App extends React.Component {
 
@@ -43,7 +44,8 @@ class App extends React.Component {
     menuOpen: false,
     customHabitOpen: false,
     logHabitOpen: false,
-    setTargetOpen: false
+    setTargetOpen: false,
+    reportsOpen: false
   };
 
   async componentDidMount() {
@@ -62,7 +64,7 @@ class App extends React.Component {
   };
 
   onMenuButtonPressed = () => {
-    this.setState({menuOpen: true, customHabitOpen: false, logHabitOpen: false, setTargetOpen: false});
+    this.setState({menuOpen: true, customHabitOpen: false, logHabitOpen: false, setTargetOpen: false, reportsOpen: false});
   };
 
   onCloseMenuButtonPressed = () => {
@@ -79,6 +81,10 @@ class App extends React.Component {
 
   openSetTargetView = () => {
     this.setState({menuOpen:false, setTargetOpen: true});
+  };
+
+  openReportsView = () => {
+    this.setState({menuOpen:false, reportsOpen: true});
   };
 
   onAddCustomHabitButtonPressed = (habit) => {
@@ -111,13 +117,14 @@ class App extends React.Component {
   render () {
     if(this.state.menuOpen) {
       return (
-        <SafeAreaView style={[{flex:1}]}>
-          <StatusBar barStyle={'dark-content'} />
+        <SafeAreaView style={styles.safeArea}>
+          {/* <StatusBar barStyle={'dark-content'} /> */}
           <MenuView 
             onCloseMenuButtonPressed={this.onCloseMenuButtonPressed}
             openAddCustomHabitView={this.openAddCustomHabitView}
             openLogHabitView={this.openLogHabitView}
             openSetTargetView={this.openSetTargetView}
+            openReportsView={this.openReportsView}
           />
         </SafeAreaView>
       );
@@ -125,8 +132,8 @@ class App extends React.Component {
 
     if(this.state.customHabitOpen) {
       return (
-        <SafeAreaView style={[{flex:1}]}>
-          <StatusBar barStyle={'dark-content'} />
+        <SafeAreaView style={styles.safeArea}>
+          {/* <StatusBar barStyle={'dark-content'} /> */}
           <AddCustomHabitView 
             onBackButtonPressed={this.onMenuButtonPressed}
             onAddCustomHabitButtonPressed={this.onAddCustomHabitButtonPressed}
@@ -137,8 +144,8 @@ class App extends React.Component {
 
     if(this.state.logHabitOpen) {
       return (
-        <SafeAreaView style={[{flex:1}]}>
-          <StatusBar barStyle={'dark-content'} />
+        <SafeAreaView style={styles.safeArea}>
+          {/* <StatusBar barStyle={'dark-content'} /> */}
           <LogHabitView 
             presetHabits={this.state.presetHabits}
             customHabits={this.state.customHabits}
@@ -151,8 +158,8 @@ class App extends React.Component {
 
     if(this.state.setTargetOpen) {
       return (
-        <SafeAreaView style={[{flex:1}]}>
-          <StatusBar barStyle={'dark-content'} />
+        <SafeAreaView style={styles.safeArea}>
+          {/* <StatusBar barStyle={'dark-content'} /> */}
           <SetTargetView 
             presetHabits={this.state.presetHabits}
             customHabits={this.state.customHabits}
@@ -164,10 +171,27 @@ class App extends React.Component {
       );
     }
 
+    if(this.state.reportsOpen) {
+      return (
+        <SafeAreaView style={styles.safeArea}>
+          <StatusBar barStyle={'dark-content'} />
+          <ReportsView 
+            presetHabits={this.state.presetHabits}
+            customHabits={this.state.customHabits}
+            targets={this.state.targets}
+            userLog={this.state.userLog}
+            score={this.state.userLog}
+            onBackButtonPressed={this.onMenuButtonPressed}
+            onSetTargetButtonPressed={this.onSetTargetButtonPressed}
+          />
+        </SafeAreaView>
+      );
+    }
+
     if(this.state.dataLoaded) {
       return (
-        <SafeAreaView style={[{flex:1}]}>
-          <StatusBar barStyle={'dark-content'} />
+        <SafeAreaView style={styles.safeArea}>
+          {/* <StatusBar barStyle={'dark-content'} /> */}
           <HomeView 
             ongoingTargets={this.state.ongoingTargets} 
             score={this.state.score}
@@ -179,7 +203,7 @@ class App extends React.Component {
     else {
       return (
         <SafeAreaView style={[{flex:1}]}>
-          <StatusBar barStyle={'dark-content'} />
+          {/* <StatusBar barStyle={'dark-content'} /> */}
           <IntroView/>
         </SafeAreaView>
       );
@@ -193,6 +217,10 @@ const styles = StyleSheet.create({
     flex:1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#ccc'
   },
   appTitle: {
     fontSize: 40,

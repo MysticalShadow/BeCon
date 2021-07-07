@@ -12,74 +12,54 @@ import {
   FlatList
 } from 'react-native';
 
-class MenuView extends React.Component {
-
-    handleCloseMenuButtonPressed = () => {
-        this.props.onCloseMenuButtonPressed();
-    };
-
-    handleAddCustomButtonPressed = () => {
-        this.props.openAddCustomHabitView();
-    };
-
-    handleLogHabitButtonPressed = () => {
-        this.props.openLogHabitView();
-    };
-
-    handleSetTargetButtonPressed = () => {
-        this.props.openSetTargetView();
-    };
-    
-    handleReportsButtonPressed = () => {
-        this.props.openReportsView();
-    };
-
+class ReportsMenuView extends React.Component {
 
     render () {
         return (
             <View>
+
                 <TouchableOpacity 
-                    style={styles.closeButton} 
-                    onPress={this.handleCloseMenuButtonPressed}
+                    style={styles.menuItem}
+                    // onPress={this.handleAddCustomButtonPressed}
                 >
                     <Text>
-                        Close
+                        Preset Habits
                     </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity 
                     style={styles.menuItem}
-                    onPress={this.handleAddCustomButtonPressed}
+                    // onPress={this.handleLogHabitButtonPressed}
                 >
                     <Text>
-                        Add a Custom Habit
+                        Custom Habits
                     </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity 
                     style={styles.menuItem}
-                    onPress={this.handleLogHabitButtonPressed}
+                    // onPress={this.handleSetTargetButtonPressed}
                 >
                     <Text>
-                        Log a Habit
+                        Daily Coverage
                     </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity 
                     style={styles.menuItem}
-                    onPress={this.handleSetTargetButtonPressed}
+                    // onPress={this.handleSetTargetButtonPressed}
                 >
                     <Text>
-                        Set Consistency Target
+                        Weekly Coverage
                     </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity 
                     style={styles.menuItem}
-                    onPress={this.handleReportsButtonPressed}
+                    // onPress={this.handleSetTargetButtonPressed}
                 >
                     <Text>
-                        Reports
+                        Monthly Coverage
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -111,4 +91,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MenuView;
+export default ReportsMenuView;

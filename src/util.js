@@ -17,7 +17,7 @@ const dummyJSON = {
 
 async function readUserDataFromFile () {
     console.log("reading...");
-    return dummyJSON;
+    // return dummyJSON;
     try {
         return await RNFS.readFile(path, 'utf8').then( (contents) => {
             console.log(contents);

@@ -152,11 +152,73 @@ class SetTargetView extends React.Component {
                     </Text>
                 </TouchableOpacity>
 
-                <Text style={{alignSelf:'center'}}>
+                <Text style={{alignSelf:'center', fontWeight: 'bold', fontSize: 16, marginBottom: 20}}>
                     Set Target:
                 </Text>
 
                 <View style={{flexDirection:'row', alignItems:'center'}}>
+                    <View style={{flex: 0.8, flexDirection: 'column', alignItems:'flex-end', justifyContent: 'space-around'}}>
+                        <Text>From: </Text>
+                        <Text style={{marginTop:34, marginBottom:36}}>Duration: </Text>
+                        <Text style={{marginBottom: 10}}>Target Habit: </Text>
+                    </View>
+
+                    <View style={{flex: 2, alignItems:'flex-start'}}>
+                        <View style={{alignItems:'center'}}>
+                            <DatePicker
+                                style={styles.datePickerStyle}
+                                date={this.state.date} // Initial date from state
+                                mode="date" // The enum of date, datetime and time
+                                placeholder="select date"
+                                format="DD-MM-YYYY"
+                                minDate={new Date()}
+                                // maxDate="01-01-2019"
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                customStyles={{
+                                    dateIcon: {
+                                        position: 'absolute',
+                                        left: 0,
+                                        top: 4,
+                                        marginLeft: 0,
+                                    },
+                                    dateInput: {
+                                        marginLeft: 36,
+                                    },
+                                }}
+                                onDateChange={(date) => {
+                                    this.setState({date});
+                                }}
+                            />
+                        </View>
+
+                        <View style={{alignItems:'center'}}>
+                            <TextInput
+                                ref={(inputElement) => { this.inputElement = inputElement; }}
+                                onChangeText={(duration) => this.durationChanged(duration)}
+                                keyboardType='numeric'
+                                placeholder="More than 1"
+                                style={styles.duration}
+                                value={this.state.duration}
+                            />
+                        </View>
+                        <View style={{ alignItems:'center'}}>
+                            <View style={styles.dropdownContainer}>
+                                <DropDownPicker
+                                    open={this.state.habitPickerOpen}
+                                    value={this.state.habitPickerValue}
+                                    items={this.state.habitPickerItems}
+                                    setOpen={this.setOpen}
+                                    setValue={this.setValue}
+                                    setItems={this.setItems}
+                                />
+                            </View>
+                        </View>
+                    </View>
+                </View>
+                
+
+                {/* <View style={{flexDirection:'row', alignItems:'center'}}>
                     <Text>From: </Text>
                     <View style={{flex:1, alignItems:'center'}}>
                         <DatePicker
@@ -185,9 +247,9 @@ class SetTargetView extends React.Component {
                             }}
                         />
                     </View>
-                </View>
+                </View> */}
 
-                <View style={{flexDirection:'row', alignItems:'center'}}>
+                {/* <View style={{flexDirection:'row', alignItems:'center'}}>
                     <Text>Duration: </Text>
                     <View style={{flex:1, alignItems:'center'}}>
                         <TextInput
@@ -199,9 +261,9 @@ class SetTargetView extends React.Component {
                             value={this.state.duration}
                         />
                     </View>
-                </View>
+                </View> */}
 
-                <View style={{flexDirection:'row', alignItems:'center'}}>
+                {/* <View style={{flexDirection:'row', alignItems:'center'}}>
                     <Text>Target Habit: </Text>
                     <View style={{ alignItems:'center'}}>
                         <View style={styles.dropdownContainer}>
@@ -215,7 +277,7 @@ class SetTargetView extends React.Component {
                             />
                         </View>
                     </View>
-                </View>
+                </View> */}
 
                 <View style={{alignItems:'center', elevation: -1}}>
                     <TouchableOpacity 
@@ -258,7 +320,7 @@ const styles = StyleSheet.create({
     },
     dropdownContainer: {
         margin: 10,
-        width: 300,
+        width: 250,
     },
     setTargetButton: {
         alignSelf: 'center',
