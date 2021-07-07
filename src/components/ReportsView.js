@@ -17,8 +17,8 @@ class ReportsView extends React.Component {
 
     state = {
         reportsMenuOpen: true,
-        presetHabitOpen: false,
-        customHabitOpen: false,
+        presetHabitsOpen: false,
+        customHabitsOpen: false,
         dailyCoverageOpen: false,
         weeklyCoverageOpen: false,
         monthlyCoverageOpen: false,
@@ -29,7 +29,28 @@ class ReportsView extends React.Component {
     };
 
     closeReportAndOpenReportsMenu = () => {
+        this.setState({
+            reportsMenuOpen: true,
+            presetHabitsOpen: false,
+            customHabitsOpen: false,
+            dailyCoverageOpen: false,
+            weeklyCoverageOpen: false,
+            monthlyCoverageOpen: false,
+        });
+    };
 
+    onPresetHabitsPressed= () => {
+        this.setState({
+            reportsMenuOpen: false,
+            presetHabitsOpen: true,
+        });
+    };
+
+    onPresetHabitsPressed= () => {
+        this.setState({
+            reportsMenuOpen: false,
+            customHabitsOpen: true,
+        });
     };
 
     render () {
@@ -46,7 +67,57 @@ class ReportsView extends React.Component {
                         </Text>
                     </TouchableOpacity>
 
-                    <ReportsMenuView />
+                    <ReportsMenuView 
+                        onPresetHabitsPressed={this.onPresetHabitsPressed}
+                    />
+                </View>
+            );
+        }
+
+        if(this.state.presetHabitsOpen) {
+            return (
+                <View>
+                    <TouchableOpacity 
+                        style={styles.backButton} 
+                        onPress={this.closeReportAndOpenReportsMenu}
+                    >
+                        <Text>
+                            Back
+                        </Text>
+                    </TouchableOpacity>
+
+                    <FlatList 
+                        style={styles.ongoingTargetList}
+                        data={this.props.presetHabits}
+                        renderItem={({ item, index }) => (
+                            <Text style={styles.target} key={index}> - {item} </Text>
+                        )}
+                        keyExtractor={ ( item, index ) => `${index}` }
+                    />
+                </View>
+            );
+        }
+
+        if(this.state.customHabitsOpen) {
+            return (
+                <View>
+                    <TouchableOpacity 
+                        style={styles.backButton} 
+                        onPress={this.closeReportAndOpenReportsMenu}
+                    >
+                        <Text>
+                            Back
+                        </Text>
+                    </TouchableOpacity>
+
+                    <FlatList 
+                        style={styles.ongoingTargetList}
+                        data={this.props.customHabits}
+                        renderItem={({ item, index }) => (
+                            <Text style={styles.target} key={index}> - {item.habit} </Text>
+                        )}
+                        keyExtractor={ ( item, index ) => `${index}` }
+                    />
                 </View>
             );
         }

@@ -14,13 +14,21 @@ import {
 
 class ReportsMenuView extends React.Component {
 
+    handlePresetHabitsPressed = () => {
+        this.props.onPresetHabitsPressed();
+    };
+
+    handleCustomHabitsPressed = () => {
+        this.props.onCustomHabitsPressed();
+    };
+
     render () {
         return (
             <View>
 
                 <TouchableOpacity 
                     style={styles.menuItem}
-                    // onPress={this.handleAddCustomButtonPressed}
+                    onPress={this.handlePresetHabitsPressed}
                 >
                     <Text>
                         Preset Habits
@@ -29,7 +37,7 @@ class ReportsMenuView extends React.Component {
 
                 <TouchableOpacity 
                     style={styles.menuItem}
-                    // onPress={this.handleLogHabitButtonPressed}
+                    onPress={this.handlePresetHabitsPressed}
                 >
                     <Text>
                         Custom Habits
