@@ -16,7 +16,8 @@ import {
   getUserData, 
   getOngoingTargets,
   getCurrentScore,
-  writeUserDataToDB
+  writeUserDataToDB,
+  requestPermissions
 } from '../util';
 
 import IntroView from './IntroView';
@@ -45,8 +46,9 @@ class App extends React.Component {
     setTargetOpen: false
   };
 
-  componentDidMount() {
-    var data = getUserData(); // load data from file here
+  async componentDidMount() {
+    var data = await getUserData(); // load data from file here
+    console.log(data);
     var ongoingTargets = getOngoingTargets(data);
     var presetHabits = data.presetHabits;
     var customHabits = data.customHabits;

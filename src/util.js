@@ -1,4 +1,7 @@
-// import * as RNFS from 'react-native-fs';
+import { PermissionsAndroid } from 'react-native';
+
+const RNFS = require('react-native-fs');
+const path = RNFS.DocumentDirectoryPath + '/BeCon_userdata.txt';
 
 const dummyJSON = {
     presetHabits : [
@@ -13,11 +16,16 @@ const dummyJSON = {
     customHabits : []
 };
 
-function readUserDataFromFile () {
-    return dummyJSON;
+async function readUserDataFromFile () {
+    console.log("reading...");
+    return await RNFS.readFile(path, 'utf8').then( (contents) => {
+        // console.log(contents[177]);
+        return JSON.parse(contents);
+    });
+    // return dummyJSON;
 };
 
-export function writeUserDataToDB (presetHabits, customHabits, targets, userLog, score) {
+export async function writeUserDataToDB (presetHabits, customHabits, targets, userLog, score) {
     var userData = {
         presetHabits: presetHabits,
         customHabits: customHabits,
@@ -25,8 +33,14 @@ export function writeUserDataToDB (presetHabits, customHabits, targets, userLog,
         userLog: userLog,
         score: score
     }
-    console.log(userData);
-    // rnfs write
+
+    RNFS.writeFile(path, JSON.stringify(userData), 'utf8')
+        .then((success) => {
+            console.log('FILE WRITTEN!');
+        })
+        .catch((err) => {
+            console.log(err.message);
+        });
 };
 
 export function getUserData () {
