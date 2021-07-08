@@ -1,10 +1,12 @@
 import { PermissionsAndroid } from 'react-native';
 
 const RNFS = require('react-native-fs');
-const path = RNFS.DocumentDirectoryPath + '/BeCon_userdata.txt';
+const path = RNFS.ExternalStorageDirectoryPath + '/BeCon/BeCon_userdata.txt';
+const folderPath = RNFS.ExternalStorageDirectoryPath + '/BeCon';
 
 const dummyJSON = {
     presetHabits : [
+        "Dummy JSON",
         "Do 10 pushups.",
         "Clean room for 10 mins.",
         "Take 10 min walk outside."
@@ -19,12 +21,13 @@ async function readUserDataFromFile () {
     console.log("reading...");
     // return dummyJSON;
     try {
+        console.log("trying to read from "+path);
         return await RNFS.readFile(path, 'utf8').then( (contents) => {
-            console.log(contents);
             return JSON.parse(contents);
         });
     }
     catch {
+        console.log("Data read failed, reading dummy data!");
         return dummyJSON;
     }
 };
@@ -38,13 +41,21 @@ export async function writeUserDataToDB (presetHabits, customHabits, targets, us
         score: score
     }
 
-    RNFS.writeFile(path, JSON.stringify(userData), 'utf8')
-        .then((success) => {
-            console.log('FILE WRITTEN!');
-        })
-        .catch((err) => {
-            console.log(err.message);
-        });
+    console.log("trying to write at "+path);
+    try{
+        RNFS.mkdir(folderPath);
+        RNFS.writeFile(path, JSON.stringify(userData), 'utf8')
+            .then((success) => {
+                console.log('FILE WRITTEN!');
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }
+    catch{
+        console.log("File write failed!!");
+    }
+    
 };
 
 export async function getUserData () {

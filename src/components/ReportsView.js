@@ -33,6 +33,7 @@ class ReportsView extends React.Component {
             reportsMenuOpen: true,
             presetHabitsOpen: false,
             customHabitsOpen: false,
+            viewLogsOpen: false,
             dailyCoverageOpen: false,
             weeklyCoverageOpen: false,
             monthlyCoverageOpen: false,
@@ -46,12 +47,20 @@ class ReportsView extends React.Component {
         });
     };
 
-    onPresetHabitsPressed= () => {
+    onCustomHabitsPressed = () => {
         this.setState({
             reportsMenuOpen: false,
             customHabitsOpen: true,
         });
     };
+
+    onViewLogsPressed  = () => {
+        this.setState({
+            reportsMenuOpen: false,
+            viewLogsOpen: true,
+        });
+    };
+
 
     render () {
 
@@ -69,6 +78,8 @@ class ReportsView extends React.Component {
 
                     <ReportsMenuView 
                         onPresetHabitsPressed={this.onPresetHabitsPressed}
+                        onCustomHabitsPressed={this.onCustomHabitsPressed}
+                        onViewLogsPressed={this.onViewLogsPressed}
                     />
                 </View>
             );
@@ -114,7 +125,32 @@ class ReportsView extends React.Component {
                         style={styles.ongoingTargetList}
                         data={this.props.customHabits}
                         renderItem={({ item, index }) => (
-                            <Text style={styles.target} key={index}> - {item.habit} </Text>
+                            <Text style={styles.target} key={index}> - {item} </Text>
+                        )}
+                        keyExtractor={ ( item, index ) => `${index}` }
+                    />
+                </View>
+            );
+        }
+
+        if(this.state.viewLogsOpen) {
+            console.log(this.props.customHabits);
+            return (
+                <View>
+                    <TouchableOpacity 
+                        style={styles.backButton} 
+                        onPress={this.closeReportAndOpenReportsMenu}
+                    >
+                        <Text>
+                            Back
+                        </Text>
+                    </TouchableOpacity>
+
+                    <FlatList 
+                        style={styles.ongoingTargetList}
+                        data={this.props.userLog}
+                        renderItem={({ item, index }) => (
+                            <Text style={styles.target} key={index}> - {item.date}: {item.habit} </Text>
                         )}
                         keyExtractor={ ( item, index ) => `${index}` }
                     />

@@ -55,8 +55,6 @@ class App extends React.Component {
     var customHabits = data.customHabits;
     var targets = data.targets;
     var userLog = data.userLog;
-    console.log(userLog);
-    console.log(targets);
     var score = getCurrentScore(userLog, targets);
     setTimeout(() => {
       this.setState({dataLoaded: true, ongoingTargets, presetHabits, customHabits, targets, userLog, score});

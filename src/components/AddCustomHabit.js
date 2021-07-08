@@ -24,7 +24,6 @@ class AddCustomHabitView extends React.Component {
     };
 
     handleAddHabitButtonPressed = () => {
-        console.log("IN CUS "+this.state.habitString);
         this.props.onAddCustomHabitButtonPressed(this.state.habitString);
         this.inputElement.clear();
     };
