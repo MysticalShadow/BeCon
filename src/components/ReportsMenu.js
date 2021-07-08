@@ -26,6 +26,18 @@ class ReportsMenuView extends React.Component {
         this.props.onViewLogsPressed();
     };
 
+    handleDailyCoveragePressed = () => {
+        this.props.onViewPeriodicalReportPressed("day");
+    };
+
+    handleWeeklyCoveragePressed = () => {
+        this.props.onViewPeriodicalReportPressed("week");
+    };
+
+    handleMonthlyCoveragePressed = () => {
+        this.props.onViewPeriodicalReportPressed("month");
+    };
+
     render () {
         return (
             <View>
@@ -59,7 +71,7 @@ class ReportsMenuView extends React.Component {
 
                 <TouchableOpacity 
                     style={styles.menuItem}
-                    // onPress={this.handleSetTargetButtonPressed}
+                    onPress={this.handleDailyCoveragePressed}
                 >
                     <Text>
                         Daily Coverage
@@ -68,7 +80,7 @@ class ReportsMenuView extends React.Component {
 
                 <TouchableOpacity 
                     style={styles.menuItem}
-                    // onPress={this.handleSetTargetButtonPressed}
+                    onPress={this.handleWeeklyCoveragePressed}
                 >
                     <Text>
                         Weekly Coverage
@@ -77,7 +89,7 @@ class ReportsMenuView extends React.Component {
 
                 <TouchableOpacity 
                     style={styles.menuItem}
-                    // onPress={this.handleSetTargetButtonPressed}
+                    onPress={this.handleMonthlyCoveragePressed}
                 >
                     <Text>
                         Monthly Coverage

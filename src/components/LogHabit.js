@@ -62,7 +62,16 @@ class LogHabitView extends React.Component {
             habit: this.state.habitPickerValue,
             date: this.state.date
         };
-        this.props.onLogHabitButtonPressed(logItem);
+        var log = this.props.userLog;
+        
+        if(log[logItem.date] == undefined) {
+            log[logItem.date] = {habits:[logItem.habit]};
+        }
+        else {
+            log[logItem.date].habits.push(logItem.habit);
+        }
+
+        this.props.onLogHabitButtonPressed(log);
         Alert.alert(
             "Habit Logged!!",
             "Good Job! Keep going!",
@@ -102,7 +111,7 @@ class LogHabitView extends React.Component {
     render () {
         var allHabits = this.props.presetHabits.concat(this.props.customHabits);
         return (
-            <View style={{minHeight:300, zIndex:0}}>
+            <View>
                 <TouchableOpacity 
                     style={styles.backButton} 
                     onPress={this.handleBackButtonPressed}
@@ -198,7 +207,8 @@ const styles = StyleSheet.create({
         borderColor: '#000',
         borderWidth: 1,
         borderRadius: 63,
-        padding: 7
+        padding: 7,
+        elevation: -3
     },
     datePickerStyle: {
         width: 200,

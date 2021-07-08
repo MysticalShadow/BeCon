@@ -88,7 +88,7 @@ class SetTargetView extends React.Component {
 
         var target = {
             habit: this.state.habitPickerValue,
-            date: this.state.date,
+            date: getFormattedDate(this.state.date),
             duration: this.state.duration
         };
         this.props.onSetTargetButtonPressed(target);

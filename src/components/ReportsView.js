@@ -11,7 +11,13 @@ import {
   TouchableOpacity,
   FlatList
 } from 'react-native';
+
+import {
+    convertLogJSONToArray
+} from '../util';
+
 import ReportsMenuView from './ReportsMenu';
+import PeriodicalReportView from './PeriodicalReport';
 
 class ReportsView extends React.Component {
 
@@ -22,6 +28,8 @@ class ReportsView extends React.Component {
         dailyCoverageOpen: false,
         weeklyCoverageOpen: false,
         monthlyCoverageOpen: false,
+        periodicalCoverageOpen: false,
+        period: ""
     };
 
     handleBackButtonPressed = () => {
@@ -37,6 +45,7 @@ class ReportsView extends React.Component {
             dailyCoverageOpen: false,
             weeklyCoverageOpen: false,
             monthlyCoverageOpen: false,
+            periodicalCoverageOpen: false,
         });
     };
 
@@ -61,6 +70,14 @@ class ReportsView extends React.Component {
         });
     };
 
+    onViewPeriodicalReportPressed = (period) => {
+        this.setState({
+            reportsMenuOpen: false,
+            periodicalCoverageOpen: true,
+            period: period
+        });
+    };
+
 
     render () {
 
@@ -80,6 +97,7 @@ class ReportsView extends React.Component {
                         onPresetHabitsPressed={this.onPresetHabitsPressed}
                         onCustomHabitsPressed={this.onCustomHabitsPressed}
                         onViewLogsPressed={this.onViewLogsPressed}
+                        onViewPeriodicalReportPressed={this.onViewPeriodicalReportPressed}
                     />
                 </View>
             );
@@ -134,7 +152,7 @@ class ReportsView extends React.Component {
         }
 
         if(this.state.viewLogsOpen) {
-            console.log(this.props.customHabits);
+            var logArray = convertLogJSONToArray(this.props.userLog);
             return (
                 <View>
                     <TouchableOpacity 
@@ -148,11 +166,32 @@ class ReportsView extends React.Component {
 
                     <FlatList 
                         style={styles.ongoingTargetList}
-                        data={this.props.userLog}
+                        data={logArray}
                         renderItem={({ item, index }) => (
                             <Text style={styles.target} key={index}> - {item.date}: {item.habit} </Text>
                         )}
                         keyExtractor={ ( item, index ) => `${index}` }
+                    />
+                </View>
+            );
+        }
+
+        if(this.state.periodicalCoverageOpen) {
+            return (
+                <View>
+                    <TouchableOpacity 
+                        style={styles.backButton} 
+                        onPress={this.closeReportAndOpenReportsMenu}
+                    >
+                        <Text>
+                            Back
+                        </Text>
+                    </TouchableOpacity>
+
+                    <PeriodicalReportView 
+                        period={this.state.period}
+                        userLog={this.props.userLog}
+                        targets={this.props.targets}
                     />
                 </View>
             );

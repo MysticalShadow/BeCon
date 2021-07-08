@@ -6,20 +6,40 @@ const folderPath = RNFS.ExternalStorageDirectoryPath + '/BeCon';
 
 const dummyJSON = {
     presetHabits : [
-        "Dummy JSON",
         "Do 10 pushups.",
         "Clean room for 10 mins.",
-        "Take 10 min walk outside."
+        "Take 10 min walk outside.",
+        "Do exercise first thing in morning for at least 10 mins.",
+        "Meditate every morning for at least 15 mins."
     ],
-    userLog: [],
-    targets: [],
+    userLog: {
+        "08-07-2021": {
+            habits: [
+                "Clean room for 10 mins.",
+                "Do 10 pushups."
+            ]
+        },
+        "09-07-2021": {
+            habits: [
+                "Clean room for 10 mins.",
+                "Take 10 min walk outside."
+            ]
+        },
+    },
+    targets: [
+        {
+            habit: "Do 10 pushups.",
+            date: "08-07-2021",
+            duration: 3
+        }
+    ],
     score : 0,
     customHabits : []
 };
 
 async function readUserDataFromFile () {
     console.log("reading...");
-    // return dummyJSON;
+    return dummyJSON;
     try {
         console.log("trying to read from "+path);
         return await RNFS.readFile(path, 'utf8').then( (contents) => {
@@ -79,10 +99,41 @@ export function getOngoingTargets (targets) {
     return ongoingTargets;
 };
 
-export function getCurrentScore (userLog, targets) {
+export function convertLogJSONToArray (log) {
+    var logArray = [];
+    var date = getFormattedDate(new Date());
+    for(var logDate in log) {
+        if(compareDate(date, logDate))
+            date = logDate;
+    }
 
+    var totalDayEntries = 0;
+    for(var key in log)
+        if(log.hasOwnProperty(key))
+            totalDayEntries++;
+    
+    var countedDays = 0;
+
+    while(countedDays != totalDayEntries) {
+        if (log[date] != undefined) {
+            for(const habit of log[date].habits) {
+                logArray.push({habit: habit, date: date});
+            }
+            countedDays++;
+        }
+
+        date = addDaysToFormattedDate(1, date);
+    }
+
+    return logArray;
+};
+
+export function getCurrentScore (userLog, targets) {
     if(!userLog)
         return "UNABLE TO LOAD";
+
+    if(!Array.isArray(userLog))
+        userLog = convertLogJSONToArray(userLog);
 
     var normalScore = 0.00;
     normalScore = userLog.length;
@@ -140,13 +191,38 @@ export function addCustomHabitToDB (habit, currUserData) {
 }
 
 // return true if date1 >= date 2
-export function compareDate (date1, date2) {
+export function compareDate (date1, date2, strict) {
     var parts = date1.split("-");
     var date1_ =  new Date(parts[2], parts[1] - 1, parts[0]);
     parts = date2.split("-");
     var date2_ =  new Date(parts[2], parts[1] - 1, parts[0]);    
     
-    return date1_ >= date2_;
+    if(strict)
+        return date1_ > date2_;
+    else
+        return date1_ >= date2_;
+};
+
+export function isMonthSame (date1, date2) {
+    var parts1 = date1.split("-");
+    var parts2 = date2.split("-");
+    return parts1[1] == parts2[1];
+};
+
+export function isSunday (date) {
+    var parts = date.split("-");
+    var result = new Date(parts[2], parts[1] - 1, parts[0]);
+    return result.getDay() == 0 ;
+};
+
+export function getLastSunday (date) {
+    if(!date)
+        date = getFormattedDate(new Date());
+
+    while(!isSunday(date)){
+        date = addDaysToFormattedDate(-1, date);
+    }
+    return date;
 };
 
 export function getFormattedDate (date) {
@@ -163,3 +239,5 @@ export function addDaysToFormattedDate (days, date) {
 
     return getFormattedDate(result);
 };
+
+

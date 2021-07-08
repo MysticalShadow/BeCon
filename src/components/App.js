@@ -93,11 +93,13 @@ class App extends React.Component {
     }));
   };
 
-  onLogHabitButtonPressed = (logItem) => {
+  onLogHabitButtonPressed = (log) => {
     // since setState is async, we separately make new array and write
-    writeUserDataToDB(this.state.presetHabits, this.state.customHabits, this.state.targets, [...this.state.userLog, logItem], this.state.score);
+    var score = getCurrentScore(log, this.state.targets);
+    writeUserDataToDB(this.state.presetHabits, this.state.customHabits, this.state.targets, log, score);
     this.setState(prevState => ({
-      userLog: [...prevState.userLog, logItem]
+      userLog: log,
+      score: score
     }));
   };
 
@@ -147,6 +149,7 @@ class App extends React.Component {
           <LogHabitView 
             presetHabits={this.state.presetHabits}
             customHabits={this.state.customHabits}
+            userLog={this.state.userLog}
             onBackButtonPressed={this.onMenuButtonPressed}
             onLogHabitButtonPressed={this.onLogHabitButtonPressed}
           />
