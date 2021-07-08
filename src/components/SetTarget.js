@@ -42,7 +42,7 @@ class SetTargetView extends React.Component {
     
         this.state = {
             habitPickerItems: items,
-            date: new Date()
+            date: getFormattedDate(new Date())
         };
     };
 
@@ -63,7 +63,6 @@ class SetTargetView extends React.Component {
     isHabitAlreadyTarget = () => {
         for(const target of this.props.targets) {
             var finishDate = addDaysToFormattedDate(target.duration, target.date);
-            console.log(target);
             if(target.habit ==this.state.habitPickerValue && 
                  compareDate(finishDate, this.state.date)) // finishDate>=statedate gives true
             {
@@ -88,7 +87,7 @@ class SetTargetView extends React.Component {
 
         var target = {
             habit: this.state.habitPickerValue,
-            date: getFormattedDate(this.state.date),
+            date: this.state.date,
             duration: this.state.duration
         };
         this.props.onSetTargetButtonPressed(target);

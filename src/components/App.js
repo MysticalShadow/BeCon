@@ -9,7 +9,8 @@ import {
   Text,
   useColorScheme,
   View,
-  Colors
+  Colors,
+  Alert
 } from 'react-native';
 
 import {
@@ -17,7 +18,7 @@ import {
   getOngoingTargets,
   getCurrentScore,
   writeUserDataToDB,
-  requestPermissions
+  deleteUserData
 } from '../util';
 
 import IntroView from './IntroView';
@@ -59,6 +60,43 @@ class App extends React.Component {
     setTimeout(() => {
       this.setState({dataLoaded: true, ongoingTargets, presetHabits, customHabits, targets, userLog, score});
     }, 500);
+  };
+
+  onDeleteDataButtonPressed = () => {
+    var promise = deleteUserData();
+    if(!promise)
+      return
+    promise.then( () => {
+      Alert.alert(
+        "Data Deleted!!",
+        "All user data and records has been deleted!",
+        [
+            {
+                text: "OK",
+                onPress: () => {},
+            }
+        ],
+        { cancelable: false }
+      );
+      return getUserData(); // load data from file here
+    }).then((data) => {
+      var ongoingTargets = getOngoingTargets(data.targets);
+      var presetHabits = data.presetHabits;
+      var customHabits = data.customHabits;
+      var targets = data.targets;
+      var userLog = data.userLog;
+      var score = getCurrentScore(userLog, targets);
+
+      this.setState({
+        dataLoaded: true,
+        ongoingTargets, 
+        presetHabits, 
+        customHabits, 
+        targets, 
+        userLog, 
+        score
+      });
+    });
   };
 
   onMenuButtonPressed = () => {
@@ -121,10 +159,12 @@ class App extends React.Component {
           {/* <StatusBar barStyle={'dark-content'} /> */}
           <MenuView 
             onCloseMenuButtonPressed={this.onCloseMenuButtonPressed}
+            onDeleteDataButtonPressed={this.onDeleteDataButtonPressed}
             openAddCustomHabitView={this.openAddCustomHabitView}
             openLogHabitView={this.openLogHabitView}
             openSetTargetView={this.openSetTargetView}
             openReportsView={this.openReportsView}
+            
           />
         </SafeAreaView>
       );

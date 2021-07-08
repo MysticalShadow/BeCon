@@ -13,25 +13,25 @@ const dummyJSON = {
         "Meditate every morning for at least 15 mins."
     ],
     userLog: {
-        "08-07-2021": {
-            habits: [
-                "Clean room for 10 mins.",
-                "Do 10 pushups."
-            ]
-        },
-        "09-07-2021": {
-            habits: [
-                "Clean room for 10 mins.",
-                "Take 10 min walk outside."
-            ]
-        },
+        // "08-07-2021": {
+        //     habits: [
+        //         "Clean room for 10 mins.",
+        //         "Do 10 pushups."
+        //     ]
+        // },
+        // "09-07-2021": {
+        //     habits: [
+        //         "Clean room for 10 mins.",
+        //         "Take 10 min walk outside."
+        //     ]
+        // },
     },
     targets: [
-        {
-            habit: "Do 10 pushups.",
-            date: "08-07-2021",
-            duration: 3
-        }
+        // {
+        //     habit: "Do 10 pushups.",
+        //     date: "08-07-2021",
+        //     duration: 3
+        // }
     ],
     score : 0,
     customHabits : []
@@ -39,7 +39,7 @@ const dummyJSON = {
 
 async function readUserDataFromFile () {
     console.log("reading...");
-    return dummyJSON;
+    // return dummyJSON;
     try {
         console.log("trying to read from "+path);
         return await RNFS.readFile(path, 'utf8').then( (contents) => {
@@ -75,8 +75,23 @@ export async function writeUserDataToDB (presetHabits, customHabits, targets, us
     catch{
         console.log("File write failed!!");
     }
-    
 };
+
+export async function deleteUserData () {
+    try{
+        RNFS.mkdir(folderPath);
+        return RNFS.unlink(path)
+            .then((success) => {
+                console.log('FILE DELETED!');
+            })
+            .catch((err) => {
+                console.log(err.message);
+            });
+    }
+    catch{
+        console.log("File deletion failed!!");
+    }
+}
 
 export async function getUserData () {
     return await readUserDataFromFile();
@@ -92,9 +107,6 @@ export function getOngoingTargets (targets) {
             ongoingTargets.push(target);
         }
     }
-
-    // if(ongoingTargets.length == 0)
-    //     ongoingTargets.push({habit:"", date:"--"});
 
     return ongoingTargets;
 };

@@ -9,7 +9,7 @@ import {
   useColorScheme,
   View,
   TouchableOpacity,
-  FlatList
+  Alert
 } from 'react-native';
 
 class MenuView extends React.Component {
@@ -32,6 +32,24 @@ class MenuView extends React.Component {
     
     handleReportsButtonPressed = () => {
         this.props.openReportsView();
+    };
+
+    handleDeleteDataButtonPressed = () => {
+        Alert.alert(
+            "Warning!!",
+            "This will delete all your records!",
+            [
+                {
+                    text: "OK",
+                    onPress: () => {this.props.onDeleteDataButtonPressed();},
+                },
+                {
+                    text: "Cancel",
+                    onPress: () => {}
+                }
+            ],
+            { cancelable: false }
+          );
     };
 
 
@@ -80,6 +98,15 @@ class MenuView extends React.Component {
                 >
                     <Text>
                         Reports
+                    </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                    style={styles.menuItem}
+                    onPress={this.handleDeleteDataButtonPressed}
+                >
+                    <Text>
+                        Delete Data
                     </Text>
                 </TouchableOpacity>
             </View>
