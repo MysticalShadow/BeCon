@@ -10,7 +10,8 @@ import {
   useColorScheme,
   View,
   Colors,
-  Alert
+  Alert,
+  PermissionsAndroid
 } from 'react-native';
 
 import {
@@ -50,6 +51,21 @@ class App extends React.Component {
   };
 
   async componentDidMount() {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      {
+        title: 'Permission Denied!',
+        message: 'BeCon needs your permission to store user data.',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      // do smth
+    } else {
+      alert('Permission Denied!');
+      return;
+    }
+
+
     var data = await getUserData(); // load data from file here
     var ongoingTargets = getOngoingTargets(data.targets);
     var presetHabits = data.presetHabits;
