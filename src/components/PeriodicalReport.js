@@ -131,7 +131,7 @@ class PeriodicalReportView extends React.Component {
     };
 
     render () {
-        var report, modifier;
+        var report, modifier, emptyReportMessage="";
         if(this.props.period == "day") {
             report = this.getDailyReportData();
             modifier = "Date";
@@ -146,11 +146,21 @@ class PeriodicalReportView extends React.Component {
             modifier = "Month";
         }
         
-        
+        if(!report || (report.length==0))
+        {
+            emptyReportMessage = "   No records to build report..."
+            return (
+                <View style={{flex:1}}>
+                    <Text style={[styles.reportData, {flex:1, paddingTop:10}]}>{emptyReportMessage}</Text>
+                </View>
+            );
+
+        }
+
         return (
-            <View>
+            <View style={{flex:1}}>
                 <FlatList 
-                    style={styles.ongoingTargetList}
+                    style={styles.reportData}
                     data={report}
                     renderItem={({ item, index }) => (
                         <>
@@ -188,13 +198,19 @@ const styles = StyleSheet.create({
     },
     menuItem: {
         margin: 10,
-        // marginTop: 20,
         borderColor: '#000',
         borderWidth: 1,
         borderRadius: 6,
         padding: 5,
         width: 200
     },
+    reportData: {
+        borderWidth: 2,
+        margin: 10,
+        marginBottom: 14,
+        borderRadius: 6,
+        padding: 2
+    }
 });
 
 export default PeriodicalReportView;

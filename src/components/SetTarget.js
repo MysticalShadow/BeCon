@@ -91,6 +91,17 @@ class SetTargetView extends React.Component {
             duration: this.state.duration
         };
         this.props.onSetTargetButtonPressed(target);
+        Alert.alert(
+            "Target Set!!",
+            "Wish you all the best!",
+            [
+              {
+                text: "OK",
+                onPress: () => {},
+              },
+            ],
+            { cancelable: false }
+          );
     };
 
     durationChanged = (days) => {
@@ -146,7 +157,7 @@ class SetTargetView extends React.Component {
                     style={styles.backButton} 
                     onPress={this.handleBackButtonPressed}
                 >
-                    <Text>
+                    <Text style={styles.backString}>
                         Back
                     </Text>
                 </TouchableOpacity>
@@ -182,7 +193,9 @@ class SetTargetView extends React.Component {
                                         marginLeft: 0,
                                     },
                                     dateInput: {
-                                        marginLeft: 36,
+                                        marginLeft: 40,
+                                        borderColor: '#000',
+                                        borderRadius: 5,
                                     },
                                 }}
                                 onDateChange={(date) => {
@@ -196,7 +209,7 @@ class SetTargetView extends React.Component {
                                 ref={(inputElement) => { this.inputElement = inputElement; }}
                                 onChangeText={(duration) => this.durationChanged(duration)}
                                 keyboardType='numeric'
-                                placeholder="More than 1"
+                                placeholder=" (Should be more than 1) "
                                 style={styles.duration}
                                 value={this.state.duration}
                             />
@@ -210,80 +223,29 @@ class SetTargetView extends React.Component {
                                     setOpen={this.setOpen}
                                     setValue={this.setValue}
                                     setItems={this.setItems}
+                                    placeholder= "Select a Habit"
+                                    textStyle={{
+                                        fontSize: 16,
+                                    }}
+                                    itemSeparator={true}
+                                    itemSeparatorStyle={{
+                                        backgroundColor: "#bbb",
+                                    }}
+                                    searchable={true}
+                                    searchPlaceholder="Search Habit..."
+                                    maxHeight={400}
                                 />
                             </View>
                         </View>
                     </View>
                 </View>
                 
-
-                {/* <View style={{flexDirection:'row', alignItems:'center'}}>
-                    <Text>From: </Text>
-                    <View style={{flex:1, alignItems:'center'}}>
-                        <DatePicker
-                            style={styles.datePickerStyle}
-                            date={this.state.date} // Initial date from state
-                            mode="date" // The enum of date, datetime and time
-                            placeholder="select date"
-                            format="DD-MM-YYYY"
-                            minDate={new Date()}
-                            // maxDate="01-01-2019"
-                            confirmBtnText="Confirm"
-                            cancelBtnText="Cancel"
-                            customStyles={{
-                                dateIcon: {
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: 4,
-                                    marginLeft: 0,
-                                },
-                                dateInput: {
-                                    marginLeft: 36,
-                                },
-                            }}
-                            onDateChange={(date) => {
-                                this.setState({date});
-                            }}
-                        />
-                    </View>
-                </View> */}
-
-                {/* <View style={{flexDirection:'row', alignItems:'center'}}>
-                    <Text>Duration: </Text>
-                    <View style={{flex:1, alignItems:'center'}}>
-                        <TextInput
-                            ref={(inputElement) => { this.inputElement = inputElement; }}
-                            onChangeText={(duration) => this.durationChanged(duration)}
-                            keyboardType='numeric'
-                            placeholder="More than 1"
-                            style={styles.duration}
-                            value={this.state.duration}
-                        />
-                    </View>
-                </View> */}
-
-                {/* <View style={{flexDirection:'row', alignItems:'center'}}>
-                    <Text>Target Habit: </Text>
-                    <View style={{ alignItems:'center'}}>
-                        <View style={styles.dropdownContainer}>
-                            <DropDownPicker
-                                open={this.state.habitPickerOpen}
-                                value={this.state.habitPickerValue}
-                                items={this.state.habitPickerItems}
-                                setOpen={this.setOpen}
-                                setValue={this.setValue}
-                                setItems={this.setItems}
-                            />
-                        </View>
-                    </View>
-                </View> */}
-
                 <View style={{alignItems:'center', elevation: -1}}>
                     <TouchableOpacity 
                         style={styles.setTargetButton}
                         onPress={this.handleSetTargetButtonPressed}
                     >
-                        <Text style={{fontSize: 16}}>
+                        <Text style={styles.setTargetString}>
                             Set Target
                         </Text>
                     </TouchableOpacity>
@@ -304,12 +266,20 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         borderColor: '#000',
-        borderWidth: 1,
-        borderRadius: 6,
-        padding: 5
+        borderWidth: 0.7,
+        borderRadius: 10,
+        padding: 4,
+        paddingHorizontal: 8
+    },
+    backString:{
+        fontSize: 15,
+        fontFamily: "sans-serif",
+        letterSpacing: 1,
+        textShadowColor: "#111",
+        textShadowRadius: 1
     },
     datePickerStyle: {
-        width: 200,
+        width: 150,
         margin: 10
     },
     duration: {
@@ -327,9 +297,16 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         borderColor: '#000',
-        borderWidth: 1,
+        borderWidth: 1.5,
         borderRadius: 63,
         padding: 7,
+        paddingHorizontal: 10,
+        elevation: -3
+    },
+    setTargetString: {
+        fontSize: 17,
+        textShadowColor: "#111",
+        textShadowRadius: 0.5
     },
 });
 

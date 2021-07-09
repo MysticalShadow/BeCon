@@ -23,8 +23,7 @@ class ReportsView extends React.Component {
 
     state = {
         reportsMenuOpen: true,
-        presetHabitsOpen: false,
-        customHabitsOpen: false,
+        viewHabitsOpen: false,
         dailyCoverageOpen: false,
         weeklyCoverageOpen: false,
         monthlyCoverageOpen: false,
@@ -39,8 +38,7 @@ class ReportsView extends React.Component {
     closeReportAndOpenReportsMenu = () => {
         this.setState({
             reportsMenuOpen: true,
-            presetHabitsOpen: false,
-            customHabitsOpen: false,
+            viewHabitsOpen: false,
             viewLogsOpen: false,
             dailyCoverageOpen: false,
             weeklyCoverageOpen: false,
@@ -49,17 +47,10 @@ class ReportsView extends React.Component {
         });
     };
 
-    onPresetHabitsPressed= () => {
+    onViewHabitsPressed = () => {
         this.setState({
             reportsMenuOpen: false,
-            presetHabitsOpen: true,
-        });
-    };
-
-    onCustomHabitsPressed = () => {
-        this.setState({
-            reportsMenuOpen: false,
-            customHabitsOpen: true,
+            viewHabitsOpen: true,
         });
     };
 
@@ -83,18 +74,18 @@ class ReportsView extends React.Component {
 
         if(this.state.reportsMenuOpen) {
             return (
-                <View>
+                <View style={{flex:1}}>
                     <TouchableOpacity 
                         style={styles.backButton} 
                         onPress={this.handleBackButtonPressed}
                     >
-                        <Text>
+                        <Text style={styles.backString}>
                             Back
                         </Text>
                     </TouchableOpacity>
 
                     <ReportsMenuView 
-                        onPresetHabitsPressed={this.onPresetHabitsPressed}
+                        onViewHabitsPressed={this.onViewHabitsPressed}
                         onCustomHabitsPressed={this.onCustomHabitsPressed}
                         onViewLogsPressed={this.onViewLogsPressed}
                         onViewPeriodicalReportPressed={this.onViewPeriodicalReportPressed}
@@ -103,49 +94,49 @@ class ReportsView extends React.Component {
             );
         }
 
-        if(this.state.presetHabitsOpen) {
+        if(this.state.viewHabitsOpen) {
+            var habits = [];
+            for (var i=0; i<50; i++){
+                habits.push("Habit no "+i);
+            }
+
             return (
-                <View>
+                <View style={{flex:1}}>
                     <TouchableOpacity 
                         style={styles.backButton} 
                         onPress={this.closeReportAndOpenReportsMenu}
                     >
-                        <Text>
+                        <Text style={styles.backString}>
                             Back
                         </Text>
                     </TouchableOpacity>
 
+                    <Text style={styles.backString}>
+                        Preset Habits:
+                    </Text>
+
                     <FlatList 
-                        style={styles.ongoingTargetList}
-                        data={this.props.presetHabits}
+                        style={styles.presetHabitsList}
+                        data={habits}//this.props.presetHabits}
                         renderItem={({ item, index }) => (
                             <Text style={styles.target} key={index}> - {item} </Text>
                         )}
                         keyExtractor={ ( item, index ) => `${index}` }
+                        persistentScrollbar={true}
                     />
-                </View>
-            );
-        }
 
-        if(this.state.customHabitsOpen) {
-            return (
-                <View>
-                    <TouchableOpacity 
-                        style={styles.backButton} 
-                        onPress={this.closeReportAndOpenReportsMenu}
-                    >
-                        <Text>
-                            Back
-                        </Text>
-                    </TouchableOpacity>
+                    <Text style={styles.backString}>
+                        Custom Habits:
+                    </Text>
 
                     <FlatList 
-                        style={styles.ongoingTargetList}
+                        style={styles.customHabitsList}
                         data={this.props.customHabits}
                         renderItem={({ item, index }) => (
                             <Text style={styles.target} key={index}> - {item} </Text>
                         )}
                         keyExtractor={ ( item, index ) => `${index}` }
+                        persistentScrollbar={true}
                     />
                 </View>
             );
@@ -159,7 +150,7 @@ class ReportsView extends React.Component {
                         style={styles.backButton} 
                         onPress={this.closeReportAndOpenReportsMenu}
                     >
-                        <Text>
+                        <Text style={styles.backString}>
                             Back
                         </Text>
                     </TouchableOpacity>
@@ -178,12 +169,12 @@ class ReportsView extends React.Component {
 
         if(this.state.periodicalCoverageOpen) {
             return (
-                <View>
+                <View style={{flex:1}}>
                     <TouchableOpacity 
                         style={styles.backButton} 
                         onPress={this.closeReportAndOpenReportsMenu}
                     >
-                        <Text>
+                        <Text style={styles.backString}>
                             Back
                         </Text>
                     </TouchableOpacity>
@@ -203,7 +194,7 @@ class ReportsView extends React.Component {
                     style={styles.backButton} 
                     onPress={this.handleBackButtonPressed}
                 >
-                    <Text>
+                    <Text style={styles.backString}>
                         Back
                     </Text>
                 </TouchableOpacity>
@@ -224,9 +215,17 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         borderColor: '#000',
-        borderWidth: 1,
-        borderRadius: 6,
-        padding: 5
+        borderWidth: 0.7,
+        borderRadius: 10,
+        padding: 4,
+        paddingHorizontal: 8
+    },
+    backString:{
+        fontSize: 15,
+        fontFamily: "sans-serif",
+        letterSpacing: 1,
+        textShadowColor: "#111",
+        textShadowRadius: 1
     },
     menuItem: {
         margin: 10,
@@ -236,6 +235,20 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         padding: 5,
         width: 200
+    },
+    presetHabitsList: {
+        flex: 0.5,
+        borderWidth: 2,
+        margin: 10,
+        borderRadius: 6,
+        padding: 2
+    },
+    customHabitsList: {
+        flex: 0.5,
+        borderWidth: 2,
+        margin: 10,
+        borderRadius: 6,
+        padding: 2
     },
 });
 

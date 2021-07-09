@@ -111,70 +111,74 @@ class LogHabitView extends React.Component {
     render () {
         var allHabits = this.props.presetHabits.concat(this.props.customHabits);
         return (
-            <View>
+            <View style={{flex: 1}}>
                 <TouchableOpacity 
                     style={styles.backButton} 
                     onPress={this.handleBackButtonPressed}
                 >
-                    <Text>
+                    <Text style={styles.backString}>
                         Back
                     </Text>
                 </TouchableOpacity>
 
-                {/* <TextInput
-                    ref={(inputElement) => { this.inputElement = inputElement; }}
-                    onChangeText={(habitString) => this.setState({habitString})}
-                    multiline={true}
-                    placeholder="Type Habit Name Here..."
-                    style={styles.input}
-                /> */}
-
-                <DatePicker
-                    style={styles.datePickerStyle}
-                    date={this.state.date} // Initial date from state
-                    mode="date" // The enum of date, datetime and time
-                    placeholder="select date"
-                    format="DD-MM-YYYY"
-                    // minDate="01-01-2016"
-                    // maxDate="01-01-2019"
-                    confirmBtnText="Confirm"
-                    cancelBtnText="Cancel"
-                    customStyles={{
-                        dateIcon: {
-                            position: 'absolute',
-                            left: 0,
-                            top: 4,
-                            marginLeft: 0,
-                        },
-                        dateInput: {
-                            marginLeft: 36,
-                        },
-                    }}
-                    onDateChange={(date) => {
-                        this.setState({date});
-                    }}
-                />
-
-                <View style={styles.dropdownContainer}>
-                    <DropDownPicker
-                        open={this.state.habitPickerOpen}
-                        value={this.state.habitPickerValue}
-                        items={this.state.habitPickerItems}
-                        setOpen={this.setOpen}
-                        setValue={this.setValue}
-                        setItems={this.setItems}
+                <View style={{marginTop:50}}>
+                    <DatePicker
+                        style={styles.datePickerStyle}
+                        date={this.state.date} // Initial date from state
+                        mode="date" // The enum of date, datetime and time
+                        placeholder="select date"
+                        format="DD-MM-YYYY"
+                        confirmBtnText="Confirm"
+                        cancelBtnText="Cancel"
+                        customStyles={{
+                            dateIcon: {
+                                position: 'absolute',
+                                left: 0,
+                                top: 4,
+                                marginLeft: 0
+                            },
+                            dateInput: {
+                                marginLeft: 40,
+                                borderColor: '#000',
+                                borderRadius: 5,
+                            },
+                        }}
+                        onDateChange={(date) => {
+                            this.setState({date});
+                        }}
                     />
+
+                    <View style={styles.dropdownContainer}>
+                        <DropDownPicker
+                            open={this.state.habitPickerOpen}
+                            value={this.state.habitPickerValue}
+                            items={this.state.habitPickerItems}
+                            setOpen={this.setOpen}
+                            setValue={this.setValue}
+                            setItems={this.setItems}
+                            placeholder= "Select a Habit"
+                            textStyle={{
+                                fontSize: 16,
+                            }}
+                            itemSeparator={true}
+                            itemSeparatorStyle={{
+                                backgroundColor: "#bbb",
+                              }}
+                            searchable={true}
+                            searchPlaceholder="Search Habit..."
+                            maxHeight={400}
+                        />
+                    </View>
+                    
+                    <TouchableOpacity 
+                        style={styles.logHabitButton}
+                        onPress={this.handleLogHabitButtonPressed}
+                    >
+                        <Text style={styles.logHabitString}>
+                            Log Habit
+                        </Text>
+                    </TouchableOpacity>
                 </View>
-                
-                <TouchableOpacity 
-                    style={styles.addHabitButton}
-                    onPress={this.handleLogHabitButtonPressed}
-                >
-                    <Text style={{fontSize: 16}}>
-                        Log Habit
-                    </Text>
-                </TouchableOpacity> 
-                
             </View>
         );
     };
@@ -188,9 +192,17 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         borderColor: '#000',
-        borderWidth: 1,
-        borderRadius: 6,
-        padding: 5
+        borderWidth: 0.7,
+        borderRadius: 10,
+        padding: 4,
+        paddingHorizontal: 8
+    },
+    backString:{
+        fontSize: 15,
+        fontFamily: "sans-serif",
+        letterSpacing: 1,
+        textShadowColor: "#111",
+        textShadowRadius: 1
     },
     input: {
         height: 120,
@@ -199,21 +211,28 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         textAlignVertical: 'top'
     },
-    addHabitButton: {
+    logHabitButton: {
         alignSelf: 'center',
         marginLeft: 10,
         marginTop: 20,
         marginBottom: 20,
         borderColor: '#000',
-        borderWidth: 1,
+        borderWidth: 1.5,
         borderRadius: 63,
         padding: 7,
+        paddingHorizontal: 10,
         elevation: -3
     },
+    logHabitString: {
+        fontSize: 17,
+        textShadowColor: "#111",
+        textShadowRadius: 0.5
+    },
     datePickerStyle: {
-        width: 200,
+        width: 150,
         margin: 10,
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginBottom: 20
     },
     dropdownContainer: {
         margin: 10

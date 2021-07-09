@@ -10,7 +10,8 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  FlatList
+  FlatList,
+  Alert
 } from 'react-native';
 
 class AddCustomHabitView extends React.Component {
@@ -26,6 +27,17 @@ class AddCustomHabitView extends React.Component {
     handleAddHabitButtonPressed = () => {
         this.props.onAddCustomHabitButtonPressed(this.state.habitString);
         this.inputElement.clear();
+        Alert.alert(
+            "Custom Habit Added!!",
+            "You can view Custom habits in Menu->Reports!",
+            [
+              {
+                text: "OK",
+                onPress: () => {},
+              },
+            ],
+            { cancelable: false }
+          );
     };
 
     render () {
@@ -35,7 +47,7 @@ class AddCustomHabitView extends React.Component {
                     style={styles.backButton} 
                     onPress={this.handleBackButtonPressed}
                 >
-                    <Text>
+                    <Text style={styles.backString}>
                         Back
                     </Text>
                 </TouchableOpacity>
@@ -71,9 +83,17 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         borderColor: '#000',
-        borderWidth: 1,
-        borderRadius: 6,
-        padding: 5
+        borderWidth: 0.7,
+        borderRadius: 10,
+        padding: 4,
+        paddingHorizontal: 8
+    },
+    backString:{
+        fontSize: 15,
+        fontFamily: "sans-serif",
+        letterSpacing: 1,
+        textShadowColor: "#111",
+        textShadowRadius: 1
     },
     input: {
         height: 120,

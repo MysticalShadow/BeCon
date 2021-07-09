@@ -67,22 +67,22 @@ class App extends React.Component {
 
 
     var data = await getUserData(); // load data from file here
-    var ongoingTargets = getOngoingTargets(data.targets);
     var presetHabits = data.presetHabits;
     var customHabits = data.customHabits;
     var targets = data.targets;
     var userLog = data.userLog;
+    var ongoingTargets = getOngoingTargets(data.targets, userLog);
     var score = getCurrentScore(userLog, targets);
     setTimeout(() => {
       this.setState({dataLoaded: true, ongoingTargets, presetHabits, customHabits, targets, userLog, score});
-    }, 500);
+    }, 700);
   };
 
   onDeleteDataButtonPressed = () => {
     var promise = deleteUserData();
     if(!promise)
       return
-    promise.then( () => {
+    promise.catch( () => {
       Alert.alert(
         "Data Deleted!!",
         "All user data and records has been deleted!",
@@ -96,12 +96,14 @@ class App extends React.Component {
       );
       return getUserData(); // load data from file here
     }).then((data) => {
-      var ongoingTargets = getOngoingTargets(data.targets);
+      console.log("added fresh data");
+      console.log(data);
       var presetHabits = data.presetHabits;
       var customHabits = data.customHabits;
       var targets = data.targets;
       var userLog = data.userLog;
       var score = getCurrentScore(userLog, targets);
+      var ongoingTargets = getOngoingTargets(data.targets, userLog);
 
       this.setState({
         dataLoaded: true,
@@ -162,7 +164,7 @@ class App extends React.Component {
     writeUserDataToDB(this.state.presetHabits, this.state.customHabits, [...this.state.targets, target], this.state.userLog, this.state.score);
     this.setState(prevState => ({
       targets: [...prevState.targets, target],
-      ongoingTargets: getOngoingTargets([...prevState.targets, target])
+      ongoingTargets: getOngoingTargets([...prevState.targets, target], prevState.userLog)
     }));
   };
 
@@ -248,7 +250,7 @@ class App extends React.Component {
     if(this.state.dataLoaded) {
       return (
         <SafeAreaView style={styles.safeArea}>
-          {/* <StatusBar barStyle={'dark-content'} /> */}
+          <StatusBar barStyle={'dark-content'} />
           <HomeView 
             ongoingTargets={this.state.ongoingTargets} 
             score={this.state.score}
@@ -259,8 +261,8 @@ class App extends React.Component {
     }
     else {
       return (
-        <SafeAreaView style={[{flex:1}]}>
-          {/* <StatusBar barStyle={'dark-content'} /> */}
+        <SafeAreaView style={styles.safeArea}>
+          <StatusBar barStyle={'dark-content'} />
           <IntroView/>
         </SafeAreaView>
       );
@@ -277,7 +279,7 @@ const styles = StyleSheet.create({
   },
   safeArea: {
     flex: 1,
-    backgroundColor: '#ccc'
+    backgroundColor: '#dbf0fd'
   },
   appTitle: {
     fontSize: 40,

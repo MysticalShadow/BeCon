@@ -48,6 +48,7 @@ async function readUserDataFromFile () {
     }
     catch {
         console.log("Data read failed, reading dummy data!");
+        console.log(dummyJSON);
         return dummyJSON;
     }
 };
@@ -69,6 +70,7 @@ export async function writeUserDataToDB (presetHabits, customHabits, targets, us
                 console.log('FILE WRITTEN!');
             })
             .catch((err) => {
+                console.log("File write failed!!");
                 console.log(err.message);
             });
     }
@@ -85,7 +87,9 @@ export async function deleteUserData () {
                 console.log('FILE DELETED!');
             })
             .catch((err) => {
+                console.log("File deletion failed!!");
                 console.log(err.message);
+                return err;
             });
     }
     catch{
@@ -97,14 +101,19 @@ export async function getUserData () {
     return await readUserDataFromFile();
 };
 
-export function getOngoingTargets (targets) {
+export function getOngoingTargets (targets, userLog) {
     var ongoingTargets = [];
+    var todayCompletedHabits, todayDate = getFormattedDate(new Date());
+
+    if(userLog.hasOwnProperty(todayDate) && userLog[todayDate])
+        todayCompletedHabits = userLog[todayDate].habits;
 
     for(const target of targets) {
         var finishDate = addDaysToFormattedDate(target.duration, target.date);
-        if(compareDate(finishDate, getFormattedDate(new Date())))
+        if(compareDate(finishDate, todayDate))
         {
-            ongoingTargets.push(target);
+            if(!todayCompletedHabits || !todayCompletedHabits.includes(target.habit))
+                ongoingTargets.push(target);
         }
     }
 

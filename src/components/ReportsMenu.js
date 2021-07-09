@@ -14,8 +14,8 @@ import {
 
 class ReportsMenuView extends React.Component {
 
-    handlePresetHabitsPressed = () => {
-        this.props.onPresetHabitsPressed();
+    handleViewHabitsPressed = () => {
+        this.props.onViewHabitsPressed();
     };
 
     handleCustomHabitsPressed = () => {
@@ -40,23 +40,13 @@ class ReportsMenuView extends React.Component {
 
     render () {
         return (
-            <View>
-
+            <View style={styles.menuView}> 
                 <TouchableOpacity 
                     style={styles.menuItem}
-                    onPress={this.handlePresetHabitsPressed}
+                    onPress={this.handleViewHabitsPressed}
                 >
-                    <Text>
-                        Preset Habits
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity 
-                    style={styles.menuItem}
-                    onPress={this.handleCustomHabitsPressed}
-                >
-                    <Text>
-                        Custom Habits
+                    <Text style={styles.menuText}>
+                        View All Habits
                     </Text>
                 </TouchableOpacity>
 
@@ -64,7 +54,7 @@ class ReportsMenuView extends React.Component {
                     style={styles.menuItem}
                     onPress={this.handleViewLogsPressed}
                 >
-                    <Text>
+                    <Text style={styles.menuText}>
                         View your Logs
                     </Text>
                 </TouchableOpacity>
@@ -73,7 +63,7 @@ class ReportsMenuView extends React.Component {
                     style={styles.menuItem}
                     onPress={this.handleDailyCoveragePressed}
                 >
-                    <Text>
+                    <Text style={styles.menuText}>
                         Daily Coverage
                     </Text>
                 </TouchableOpacity>
@@ -82,7 +72,7 @@ class ReportsMenuView extends React.Component {
                     style={styles.menuItem}
                     onPress={this.handleWeeklyCoveragePressed}
                 >
-                    <Text>
+                    <Text style={styles.menuText}>
                         Weekly Coverage
                     </Text>
                 </TouchableOpacity>
@@ -91,7 +81,7 @@ class ReportsMenuView extends React.Component {
                     style={styles.menuItem}
                     onPress={this.handleMonthlyCoveragePressed}
                 >
-                    <Text>
+                    <Text style={styles.menuText}>
                         Monthly Coverage
                     </Text>
                 </TouchableOpacity>
@@ -113,15 +103,28 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         padding: 5
     },
-    menuItem: {
-        margin: 10,
-        // marginTop: 20,
-        borderColor: '#000',
-        borderWidth: 1,
-        borderRadius: 6,
-        padding: 5,
-        width: 200
+    menuView: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexGrow:1,
+        marginBottom:80
     },
+    menuItem: {
+        margin: 8,
+        borderColor: '#000',
+        borderWidth: 2,
+        borderRadius: 20,
+        padding: 6,
+        width: 180,
+        alignItems: 'center',
+        elevation: 1,
+        shadowColor: '#fff'
+    },
+    menuText: {
+        fontSize: 16,
+        textShadowColor: "#222",
+        textShadowRadius: 0.2
+    }
 });
 
 export default ReportsMenuView;
