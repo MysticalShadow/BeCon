@@ -9,7 +9,8 @@ import {
   useColorScheme,
   View,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  Animated
 } from 'react-native';
 import { 
     getFormattedDate,
@@ -23,6 +24,23 @@ import {
 } from '../util';
 
 class PeriodicalReportView extends React.Component {
+
+    componentDidMount () {
+        this.fadeIn();
+    };
+
+    state = {
+        fadeAnimation: new Animated.Value(0)
+    };
+
+    fadeIn = () => {
+        Animated.timing(this.state.fadeAnimation, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true
+        }).start();
+    };
+
 
     getDailyReportData = () => {
         var currDate = "";
@@ -158,7 +176,7 @@ class PeriodicalReportView extends React.Component {
         }
 
         return (
-            <View style={{flex:1}}>
+            <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
                 <FlatList 
                     style={styles.reportData}
                     data={report}
@@ -178,7 +196,7 @@ class PeriodicalReportView extends React.Component {
                     )}
                     keyExtractor={ ( item, index ) => `${index}` }
                 />
-            </View>
+            </Animated.View>
         );
     };
 

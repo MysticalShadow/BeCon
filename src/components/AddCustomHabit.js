@@ -11,13 +11,27 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
-  Alert
+  Alert,
+  Animated
 } from 'react-native';
 
 class AddCustomHabitView extends React.Component {
 
+    componentDidMount () {
+        this.fadeIn();
+    };
+
+    fadeIn = () => {
+        Animated.timing(this.state.fadeAnimation, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start();
+    };
+
     state = {
-        habitString: ""
+        habitString: "",
+        fadeAnimation: new Animated.Value(0)
     };
 
     handleBackButtonPressed = () => {
@@ -42,7 +56,7 @@ class AddCustomHabitView extends React.Component {
 
     render () {
         return (
-            <View>
+            <Animated.View style={{opacity: this.state.fadeAnimation}}>
                 <TouchableOpacity 
                     style={styles.backButton} 
                     onPress={this.handleBackButtonPressed}
@@ -69,7 +83,7 @@ class AddCustomHabitView extends React.Component {
                     </Text>
                 </TouchableOpacity>
                 
-            </View>
+            </Animated.View>
         );
 
     };

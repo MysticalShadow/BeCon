@@ -9,11 +9,28 @@ import {
   useColorScheme,
   View,
   TouchableOpacity,
-  Alert
+  Alert,
+  Animated
 } from 'react-native';
 import { getFormattedDate } from '../util';
 
 class MenuView extends React.Component {
+
+    componentDidMount () {
+        this.fadeIn();
+    };
+
+    state = {
+        fadeAnimation: new Animated.Value(0)
+    };
+
+    fadeIn = () => {
+        Animated.timing(this.state.fadeAnimation, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start();
+    };
 
     handleCloseMenuButtonPressed = () => {
         this.props.onCloseMenuButtonPressed();
@@ -56,7 +73,7 @@ class MenuView extends React.Component {
 
     render () {
         return (
-            <View style={{flex:1}}>
+            <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
                 <TouchableOpacity 
                     style={styles.closeButton} 
                     onPress={this.handleCloseMenuButtonPressed}
@@ -112,7 +129,7 @@ class MenuView extends React.Component {
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </Animated.View>
             
         );
     };

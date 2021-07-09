@@ -10,13 +10,33 @@ import {
   useColorScheme,
   View,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  Animated
 } from 'react-native';
 
 class HomeView extends React.Component {
 
-    state = {
+    componentDidMount () {
+        this.fadeIn();
+    };
 
+    state = {
+        fadeAnimation: new Animated.Value(0)
+    };
+
+    fadeIn = () => {
+        Animated.timing(this.state.fadeAnimation, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start();
+    };
+    
+    fadeOut = () => {
+        Animated.timing(this.state.fadeAnimation, {
+            toValue: 0,
+            duration: 1000
+        }).start();
     };
 
     handleMenuButtonPressed = () => {
@@ -34,7 +54,7 @@ class HomeView extends React.Component {
             
 
         return (
-            <View style={styles.container}>
+            <Animated.View style={[styles.container, {opacity: this.state.fadeAnimation}]}>
                 <TouchableOpacity style={styles.menuButton} onPress={this.handleMenuButtonPressed}>
                     <Text style={styles.menuString}> Menu </Text>
                 </TouchableOpacity>
@@ -67,16 +87,14 @@ class HomeView extends React.Component {
                         />
                     </View>
                 </View>
-            </View>
+            </Animated.View>
         );
     }
 }
 
 const styles = StyleSheet.create({
     container: {
-      flex:1,
-    //   justifyContent: 'center',
-    //   alignItems: 'center'
+        flex:1
     },
     menuButton: {
         alignSelf: 'baseline',

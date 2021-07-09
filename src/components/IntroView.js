@@ -9,14 +9,38 @@ import {
   Text,
   useColorScheme,
   View,
+  Animated
 } from 'react-native';
 
 class IntroView extends React.Component {
+
+    componentDidMount () {
+        this.fadeInOut();
+    };
+
+    state = {
+        fadeAnimation: new Animated.Value(0)
+    };
+
+    fadeInOut = () => {
+        Animated.timing(this.state.fadeAnimation, {
+            toValue: 1,
+            duration: 1000,
+            useNativeDriver: true
+        }).start(() => {
+            Animated.timing(this.state.fadeAnimation, {
+                toValue: 0,
+                duration: 10000,
+                useNativeDriver: true
+            }).start();
+        });
+    };
+
     render () {
         return (
-            <View style={styles.container}>
+            <Animated.View style={[styles.container, {opacity: this.state.fadeAnimation}]}>
                 <Text style={styles.appTitle}>Be-CON</Text>
-            </View>
+            </Animated.View>
         );
     }
 }

@@ -9,7 +9,8 @@ import {
   useColorScheme,
   View,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  Animated
 } from 'react-native';
 
 import {
@@ -21,6 +22,26 @@ import PeriodicalReportView from './PeriodicalReport';
 
 class ReportsView extends React.Component {
 
+    componentDidMount () {
+        this.fadeIn();
+    };
+
+    fadeIn = () => {
+        Animated.timing(this.state.fadeAnimation, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start();
+    };
+
+    fadeOutIn = () => {
+        Animated.timing(this.state.fadeAnimation, {
+            toValue: 0,
+            duration: 0,
+            useNativeDriver: true
+        }).start(() => {this.fadeIn()});
+    };
+
     state = {
         reportsMenuOpen: true,
         viewHabitsOpen: false,
@@ -28,7 +49,8 @@ class ReportsView extends React.Component {
         weeklyCoverageOpen: false,
         monthlyCoverageOpen: false,
         periodicalCoverageOpen: false,
-        period: ""
+        period: "",
+        fadeAnimation: new Animated.Value(0)
     };
 
     handleBackButtonPressed = () => {
@@ -62,6 +84,7 @@ class ReportsView extends React.Component {
     };
 
     onViewPeriodicalReportPressed = (period) => {
+        this.fadeOutIn();
         this.setState({
             reportsMenuOpen: false,
             periodicalCoverageOpen: true,
@@ -74,7 +97,7 @@ class ReportsView extends React.Component {
 
         if(this.state.reportsMenuOpen) {
             return (
-                <View style={{flex:1}}>
+                <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
                     <TouchableOpacity 
                         style={styles.backButton} 
                         onPress={this.handleBackButtonPressed}
@@ -90,7 +113,7 @@ class ReportsView extends React.Component {
                         onViewLogsPressed={this.onViewLogsPressed}
                         onViewPeriodicalReportPressed={this.onViewPeriodicalReportPressed}
                     />
-                </View>
+                </Animated.View>
             );
         }
 
@@ -101,7 +124,7 @@ class ReportsView extends React.Component {
             }
 
             return (
-                <View style={{flex:1}}>
+                <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
                     <TouchableOpacity 
                         style={styles.backButton} 
                         onPress={this.closeReportAndOpenReportsMenu}
@@ -117,7 +140,7 @@ class ReportsView extends React.Component {
 
                     <FlatList 
                         style={styles.presetHabitsList}
-                        data={habits}//this.props.presetHabits}
+                        data={this.props.presetHabits}
                         renderItem={({ item, index }) => (
                             <Text style={styles.target} key={index}> - {item} </Text>
                         )}
@@ -138,14 +161,14 @@ class ReportsView extends React.Component {
                         keyExtractor={ ( item, index ) => `${index}` }
                         persistentScrollbar={true}
                     />
-                </View>
+                </Animated.View>
             );
         }
 
         if(this.state.viewLogsOpen) {
             var logArray = convertLogJSONToArray(this.props.userLog);
             return (
-                <View>
+                <Animated.View style={{opacity:this.state.fadeAnimation}}>
                     <TouchableOpacity 
                         style={styles.backButton} 
                         onPress={this.closeReportAndOpenReportsMenu}
@@ -163,13 +186,13 @@ class ReportsView extends React.Component {
                         )}
                         keyExtractor={ ( item, index ) => `${index}` }
                     />
-                </View>
+                </Animated.View>
             );
         }
 
         if(this.state.periodicalCoverageOpen) {
             return (
-                <View style={{flex:1}}>
+                <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
                     <TouchableOpacity 
                         style={styles.backButton} 
                         onPress={this.closeReportAndOpenReportsMenu}
@@ -184,12 +207,12 @@ class ReportsView extends React.Component {
                         userLog={this.props.userLog}
                         targets={this.props.targets}
                     />
-                </View>
+                </Animated.View>
             );
         }
 
         return (
-            <View>
+            <Animated.View style={{opacity:this.state.fadeAnimation}}>
                 <TouchableOpacity 
                     style={styles.backButton} 
                     onPress={this.handleBackButtonPressed}
@@ -198,10 +221,7 @@ class ReportsView extends React.Component {
                         Back
                     </Text>
                 </TouchableOpacity>
-
-                
-                
-            </View>
+            </Animated.View>
         );
     };
 

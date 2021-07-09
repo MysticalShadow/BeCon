@@ -12,7 +12,8 @@ import {
   TextInput,
   FlatList,
   Easing,
-  Alert
+  Alert,
+  Animated
 } from 'react-native';
 
 import {
@@ -41,16 +42,30 @@ class LogHabitView extends React.Component {
     
         this.state = {
             habitPickerItems: items,
-            date: getFormattedDate(new Date())
+            date: getFormattedDate(new Date()),
+            fadeAnimation: new Animated.Value(0),
         };
-      }
+    }
+
+    componentDidMount () {
+        this.fadeIn();
+    };
+
+    fadeIn = () => {
+        Animated.timing(this.state.fadeAnimation, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true
+        }).start();
+    };
 
     state = {
         date: "",
         habitsList: [],
         habitPickerOpen: false,
         habitPickerValue: null,
-        habitPickerItems: []
+        habitPickerItems: [],
+        fadeAnimation: new Animated.Value(0)
     };
 
     handleBackButtonPressed = () => {
@@ -111,7 +126,7 @@ class LogHabitView extends React.Component {
     render () {
         var allHabits = this.props.presetHabits.concat(this.props.customHabits);
         return (
-            <View style={{flex: 1}}>
+            <Animated.View style={{flex: 1, opacity: this.state.fadeAnimation}}>
                 <TouchableOpacity 
                     style={styles.backButton} 
                     onPress={this.handleBackButtonPressed}
@@ -179,7 +194,7 @@ class LogHabitView extends React.Component {
                         </Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </Animated.View>
         );
     };
 
