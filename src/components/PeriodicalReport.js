@@ -20,7 +20,8 @@ import {
     isMonthSame,
     isSunday,
     addDaysToFormattedDate,
-    getLastSunday
+    getLastSunday,
+    getScore
 } from '../util';
 
 class PeriodicalReportView extends React.Component {
@@ -52,12 +53,26 @@ class PeriodicalReportView extends React.Component {
         for(var i=0; i<logArray.length; i++) {
             var log = logArray[i];  
             if(currDate == "" || compareDate(log.date, currDate, true)) {
-                if(habits.length > 0)
+                console.log("Daily");
+                console.log(currDate);
+                console.log(log.date);
+                console.log("-------");
+                while(currDate != "" && compareDate(log.date, currDate, true))
+                {
                     dailyReport.push({
                         date: currDate,
-                        score: getCurrentScore(logArray.slice(0,i), this.props.targets),
+                        score: getScore(logArray.slice(0,i+1), this.props.targets, currDate),
                         habits: habits
                     });
+                    currDate = addDaysToFormattedDate(1, currDate);
+                    habits = [];
+                }
+                // if(habits.length > 0)
+                //     dailyReport.push({
+                //         date: currDate,
+                //         score: getScore(logArray.slice(0,i+1), this.props.targets, currDate),
+                //         habits: habits
+                //     });
                 habits = [];
                 currDate = log.date;
             }
@@ -67,7 +82,7 @@ class PeriodicalReportView extends React.Component {
         if(habits.length > 0)
             dailyReport.push({
                 date: currDate,
-                score: getCurrentScore(logArray.slice(0,i), this.props.targets),
+                score: getCurrentScore(logArray, this.props.targets),
                 habits: habits
             });
         

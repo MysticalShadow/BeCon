@@ -166,13 +166,13 @@ const styles = StyleSheet.create({
         margin: 10,
         // marginTop: 20,
         borderColor: '#000',
-        borderWidth: 2,
+        // borderWidth: 2.3,
         borderRadius: 20,
-        padding: 6,
+        padding: 7,
         width: 250,
         alignItems: 'center',
-        elevation: 1,
-        shadowColor: '#fff'
+        elevation: 3,
+        shadowColor: '#000'
     },
     menuText: {
         fontSize: 18,

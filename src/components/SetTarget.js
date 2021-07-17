@@ -77,8 +77,8 @@ class SetTargetView extends React.Component {
 
     isHabitAlreadyTarget = () => {
         for(const target of this.props.targets) {
-            var finishDate = addDaysToFormattedDate(target.duration, target.date);
-            if(target.habit ==this.state.habitPickerValue && 
+            var finishDate = addDaysToFormattedDate(parseInt(target.duration)-1, target.date);
+            if(target.habit == this.state.habitPickerValue && 
                  compareDate(finishDate, this.state.date)) // finishDate>=statedate gives true
             {
                 this.showHabitAlreadyPrompt();
@@ -88,7 +88,19 @@ class SetTargetView extends React.Component {
         return false;
     };
 
+    isInputInvalid = () => {
+        if(isNaN(this.state.duration) || isNaN(parseInt(this.state.duration)) || this.state.habitPickerValue === undefined)
+            return true;
+        return false;
+    };
+
     handleSetTargetButtonPressed = () => {
+        if(this.isInputInvalid())
+        {
+            this.showInvalidInputPrompt();
+            return;
+        }
+
         if(this.state.duration < 2)
         {
             this.showDurationRestrictionPrompt();
@@ -103,7 +115,7 @@ class SetTargetView extends React.Component {
         var target = {
             habit: this.state.habitPickerValue,
             date: this.state.date,
-            duration: this.state.duration
+            duration: parseInt(this.state.duration, 10)
         };
         this.props.onSetTargetButtonPressed(target);
         Alert.alert(
@@ -121,6 +133,16 @@ class SetTargetView extends React.Component {
 
     durationChanged = (days) => {
         this.setState({duration:days});
+    };
+
+    showInvalidInputPrompt = () => {
+        Alert.alert(
+            "Invalid Input!!",
+            "Either Duration is not a number or Target Habit is not selected.",
+            [
+                { text: "OK" }
+            ]
+        );
     };
 
     showDurationRestrictionPrompt = () => {
@@ -167,7 +189,7 @@ class SetTargetView extends React.Component {
     render () {
 
         return (
-            <Animated.View style={{opacity: this.state.fadeAnimation}}>
+            <Animated.View style={{opacity: this.state.fadeAnimation, elevation: -1, flex:1}}>
                 <TouchableOpacity 
                     style={styles.backButton} 
                     onPress={this.handleBackButtonPressed}
@@ -246,6 +268,7 @@ class SetTargetView extends React.Component {
                                     itemSeparatorStyle={{
                                         backgroundColor: "#bbb",
                                     }}
+                                                                        
                                     searchable={true}
                                     searchPlaceholder="Search Habit..."
                                     maxHeight={400}
@@ -255,7 +278,7 @@ class SetTargetView extends React.Component {
                     </View>
                 </View>
                 
-                <View style={{alignItems:'center', elevation: -1}}>
+                <View style={{alignItems:'center', elevation: -2}}>
                     <TouchableOpacity 
                         style={styles.setTargetButton}
                         onPress={this.handleSetTargetButtonPressed}
@@ -301,10 +324,11 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         borderWidth: 1,
         borderRadius: 5,
+        color: 'black'
     },
     dropdownContainer: {
         margin: 10,
-        width: 250,
+        width: 250
     },
     setTargetButton: {
         alignSelf: 'center',
@@ -316,7 +340,7 @@ const styles = StyleSheet.create({
         borderRadius: 63,
         padding: 7,
         paddingHorizontal: 10,
-        elevation: -3
+        // elevation: -3
     },
     setTargetString: {
         fontSize: 17,

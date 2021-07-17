@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 class ReportsMenuView extends React.Component {
+    
 
     handleViewHabitsPressed = () => {
         this.props.onViewHabitsPressed();
@@ -112,13 +113,13 @@ const styles = StyleSheet.create({
     menuItem: {
         margin: 8,
         borderColor: '#000',
-        borderWidth: 2,
+        // borderWidth: 2,
         borderRadius: 20,
-        padding: 6,
+        padding: 8,
         width: 180,
         alignItems: 'center',
-        elevation: 1,
-        shadowColor: '#fff'
+        elevation: 3,
+        shadowColor: '#000'
     },
     menuText: {
         fontSize: 16,

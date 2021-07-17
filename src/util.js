@@ -4,7 +4,8 @@ const RNFS = require('react-native-fs');
 const path = RNFS.ExternalStorageDirectoryPath + '/BeCon/BeCon_userdata.txt';
 const folderPath = RNFS.ExternalStorageDirectoryPath + '/BeCon';
 
-const dummyJSON = {
+const dummyJSON = 
+{
     presetHabits : [
         "Do 10 pushups.",
         "Clean room for 10 mins.",
@@ -105,19 +106,50 @@ export function getOngoingTargets (targets, userLog) {
     var ongoingTargets = [];
     var todayCompletedHabits, todayDate = getFormattedDate(new Date());
 
-    if(userLog.hasOwnProperty(todayDate) && userLog[todayDate])
+    if(userLog && userLog.hasOwnProperty(todayDate) && userLog[todayDate])
         todayCompletedHabits = userLog[todayDate].habits;
 
     for(const target of targets) {
         var finishDate = addDaysToFormattedDate(target.duration, target.date);
-        if(compareDate(finishDate, todayDate))
+        if(compareDate(todayDate, target.date))
         {
-            if(!todayCompletedHabits || !todayCompletedHabits.includes(target.habit))
+            if(compareDate(finishDate, todayDate, true))
                 ongoingTargets.push(target);
+            else if(compareDate(finishDate, todayDate) && (!todayCompletedHabits || !todayCompletedHabits.includes(target.habit))) 
+            {
+                ongoingTargets.push(target);
+            }
         }
     }
-
     return ongoingTargets;
+};
+
+export function getTodaysTargets (targets) {
+    var todaysTargets = [];
+    var todayDate = getFormattedDate(new Date());
+
+    for(const target of targets) {
+        var finishDate = addDaysToFormattedDate(target.duration-1, target.date);
+        if(compareDate(todayDate, target.date) && compareDate(finishDate, todayDate))
+        {
+            todaysTargets.push(target);
+        }
+    }
+    return todaysTargets;
+};
+
+export function isTodaysTargetsCompleted (targets, userLog) {
+    var todaysTargets = getTodaysTargets(targets, userLog);
+    var todayCompletedHabits, todayDate = getFormattedDate(new Date());
+
+    if(userLog && userLog.hasOwnProperty(todayDate) && userLog[todayDate])
+        todayCompletedHabits = userLog[todayDate].habits;
+
+    for(const target of todaysTargets) {
+        if(!todayCompletedHabits || !todayCompletedHabits.includes(target.habit))
+            return false;
+    }
+    return true;
 };
 
 export function convertLogJSONToArray (log) {
@@ -149,7 +181,47 @@ export function convertLogJSONToArray (log) {
     return logArray;
 };
 
-export function getCurrentScore (userLog, targets) {
+export function getScore (userLog, targets, endDate, startDate) {
+
+    if(!startDate && !endDate)
+        return getCurrentScore(userLog, targets);
+    
+    if(!userLog)
+        return "UNABLE TO LOAD";
+
+    if(!Array.isArray(userLog))
+        userLog = convertLogJSONToArray(userLog);
+
+    if(!startDate)
+    {
+        startDate = getFormattedDate(new Date());
+        for(const log of userLog) {
+            if(compareDate(startDate, log.date))
+                startDate = log.date;
+        }
+        for(const target of targets) {
+            if(compareDate(startDate, target.date))
+                startDate = target.date;
+        }
+    }
+    
+    var filteredUserLog = [];
+    for(const log of userLog) {
+        if(compareDate(endDate, log.date) && compareDate(log.date, startDate))
+            filteredUserLog.push(log);
+    }
+
+    var filteredTargets = [];
+    for(const target of targets) {
+        if(compareDate(target.date, startDate) && compareDate(endDate, target.date))
+            filteredTargets.push(target);
+    }
+
+    var score = getCurrentScore(filteredUserLog, filteredTargets, endDate);
+    return score;
+};
+
+export function getCurrentScore (userLog, targets, endDate) {
     if(!userLog)
         return "UNABLE TO LOAD";
 
@@ -187,23 +259,34 @@ export function getCurrentScore (userLog, targets) {
     }
 
     var startDate = getFormattedDate(new Date());
-    var todayDateUnformat = new Date();
+    var endDateUnformat;
+    if(!endDate)
+        endDateUnformat = new Date();
+    else
+    {
+        var parts = endDate.split("-");
+        endDateUnformat = new Date(parts[2], parts[1] - 1, parts[0]);
+    }
 
     for(const log of userLog) {
         if(compareDate(startDate, log.date))
             startDate = log.date;
     }
+    for(const target of targets) {
+        if(compareDate(startDate, target.date))
+            startDate = target.date;
+    }
 
     var parts = startDate.split("-");
     var startDateUnformat =  new Date(parts[2], parts[1] - 1, parts[0]);
 
-    const utc2 = Date.UTC(todayDateUnformat.getFullYear(), todayDateUnformat.getMonth(), todayDateUnformat.getDate());
+    const utc2 = Date.UTC(endDateUnformat.getFullYear(), endDateUnformat.getMonth(), endDateUnformat.getDate());
     const utc1 = Date.UTC(startDateUnformat.getFullYear(), startDateUnformat.getMonth(), startDateUnformat.getDate());
     
     var totalDays = Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24)) + 1;
 
     consistencyScore = totalConsistency/totalDays;
-    return consistencyScore;
+    return consistencyScore.toFixed(3);
 };
 
 export function addCustomHabitToDB (habit, currUserData) {
@@ -254,10 +337,12 @@ export function getFormattedDate (date) {
 };
 
 export function addDaysToFormattedDate (days, date) {
+    
     var parts = date.split("-");
     var result = new Date(parts[2], parts[1] - 1, parts[0]);
+    if(typeof days == "string")
+        days = parseInt(days, 10);
     result.setDate(result.getDate() + days);    
-
     return getFormattedDate(result);
 };
 

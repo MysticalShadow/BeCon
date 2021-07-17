@@ -14,6 +14,12 @@ import {
   Animated
 } from 'react-native';
 
+import {
+    getOngoingTargets,
+    getTodaysTargets,
+    isTodaysTargetsCompleted
+} from '../util';
+
 class HomeView extends React.Component {
 
     componentDidMount () {
@@ -45,13 +51,20 @@ class HomeView extends React.Component {
 
     render () {
         const currConsistency = this.props.score;
-        var emptyTargets = [];
-        if(this.props.ongoingTargets.length == 0)
+        var emptyTargets = [], ongoingTargets = [], todaysTargets = [];
+
+        todaysTargets = getTodaysTargets(this.props.targets, this.props.userLog);
+        if (todaysTargets.length > 0 && isTodaysTargetsCompleted(this.props.targets, this.props.userLog))
+        {
+            emptyTargets.push("Amazing!!");
+            emptyTargets.push("All targets for today are completed!!");
+        }
+        else if (todaysTargets.length == 0) 
         {
             emptyTargets.push("No targets for today!");
             emptyTargets.push("Go in \"Menu\" -> \"Set Consistency Target\" and set some targets to build conistency!!");
-        }
-            
+            todaysTargets = []
+        }   
 
         return (
             <Animated.View style={[styles.container, {opacity: this.state.fadeAnimation}]}>
@@ -71,7 +84,7 @@ class HomeView extends React.Component {
                         </Text>
                         <FlatList 
                             style={styles.ongoingTargetList}
-                            data={this.props.ongoingTargets}
+                            data={todaysTargets}
                             renderItem={({ item, index }) => (
                                 <Text style={styles.target} key={index}> - {item.habit} </Text>
                             )}
