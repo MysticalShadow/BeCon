@@ -218,8 +218,6 @@ export function getScore (userLog, targets, endDate, startDate) {
     }
 
     var score = getCurrentScore(filteredUserLog, filteredTargets, endDate);
-    console.log("in get score");
-    console.log(typeof score);
     return score;
 };
 
