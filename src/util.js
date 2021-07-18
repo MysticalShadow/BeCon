@@ -218,6 +218,8 @@ export function getScore (userLog, targets, endDate, startDate) {
     }
 
     var score = getCurrentScore(filteredUserLog, filteredTargets, endDate);
+    console.log("in get score");
+    console.log(typeof score);
     return score;
 };
 
@@ -250,11 +252,11 @@ export function getCurrentScore (userLog, targets, endDate) {
         }
         if(consistentDays == target.duration)
         {
-            totalConsistency = totalConsistency + consistentDays * 0.02;
+            totalConsistency = totalConsistency + consistentDays * consistentDays * 0.02;
         }
         else
         {
-            totalConsistency = totalConsistency + consistentDays * 0.01;
+            totalConsistency = totalConsistency + consistentDays * consistentDays * 0.01;
         }
     }
 
@@ -286,7 +288,8 @@ export function getCurrentScore (userLog, targets, endDate) {
     var totalDays = Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24)) + 1;
 
     consistencyScore = totalConsistency/totalDays;
-    return consistencyScore.toFixed(3);
+    return Math.round( consistencyScore * 1e3 ) / 1e3;
+    // return consistencyScore.toFixed(3);
 };
 
 export function addCustomHabitToDB (habit, currUserData) {
@@ -329,11 +332,30 @@ export function getLastSunday (date) {
     return date;
 };
 
+export function getPreviousMonthYear (date) {
+    if(!date){
+        date = new Date();
+    }
+    else 
+        date = getUnformattedDate(date);
+    
+    date.setDate(1);
+    date.setMonth(date.getMonth()-1);
+    date = getFormattedDate(date);
+    return date.slice(3, date.length);
+};
+
 export function getFormattedDate (date) {
     var dd = String(date.getDate()).padStart(2, '0');
     var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
     var yyyy = date.getFullYear();
     return dd+"-"+mm+"-"+yyyy;
+};
+
+export function getUnformattedDate (date) {
+    var parts = date.split("-");
+    var result = new Date(parts[2], parts[1] - 1, parts[0]);
+    return result;
 };
 
 export function addDaysToFormattedDate (days, date) {

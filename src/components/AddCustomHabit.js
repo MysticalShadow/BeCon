@@ -70,7 +70,7 @@ class AddCustomHabitView extends React.Component {
                     ref={(inputElement) => { this.inputElement = inputElement; }}
                     onChangeText={(habitString) => this.setState({habitString})}
                     multiline={true}
-                    placeholder="Type Habit Name Here..."
+                    placeholder="Type Custom Habit Here..."
                     style={styles.input}
                 />
 
@@ -78,7 +78,7 @@ class AddCustomHabitView extends React.Component {
                     style={styles.addHabitButton}
                     onPress={this.handleAddHabitButtonPressed}
                 >
-                    <Text style={{fontSize: 16}}>
+                    <Text style={styles.addHabitString}>
                         Add Habit
                     </Text>
                 </TouchableOpacity>
@@ -112,9 +112,12 @@ const styles = StyleSheet.create({
     input: {
         height: 120,
         marginHorizontal: 12,
+        marginTop: 40,
         borderWidth: 1,
         borderRadius: 5,
-        textAlignVertical: 'top'
+        textAlignVertical: 'top',
+        color: 'black',
+        fontSize: 16
     },
     addHabitButton: {
         alignSelf: 'center',
@@ -122,9 +125,15 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         borderColor: '#000',
-        borderWidth: 1,
+        borderWidth: 1.5,
         borderRadius: 63,
-        padding: 7
+        padding: 7,
+        paddingHorizontal: 10
+    },
+    addHabitString: {
+        fontSize: 17,
+        textShadowColor: "#111",
+        textShadowRadius: 0.5
     }
 });
 

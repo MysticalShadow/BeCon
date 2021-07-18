@@ -339,8 +339,7 @@ const styles = StyleSheet.create({
         borderWidth: 1.5,
         borderRadius: 63,
         padding: 7,
-        paddingHorizontal: 10,
-        // elevation: -3
+        paddingHorizontal: 10
     },
     setTargetString: {
         fontSize: 17,

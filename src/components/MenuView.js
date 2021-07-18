@@ -52,6 +52,10 @@ class MenuView extends React.Component {
         this.props.openReportsView();
     };
 
+    handleGuideButtonPressed = () => {
+        this.props.openGuideView();
+    };
+
     handleDeleteDataButtonPressed = () => {
         Alert.alert(
             "Warning!!",
@@ -82,6 +86,7 @@ class MenuView extends React.Component {
                         Close
                     </Text>
                 </TouchableOpacity>
+
                 <View style={styles.menuView}>
 
                     <TouchableOpacity 
@@ -117,6 +122,15 @@ class MenuView extends React.Component {
                     >
                         <Text style={styles.menuText}>
                             Reports
+                        </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={styles.menuItem}
+                        onPress={this.handleGuideButtonPressed}
+                    >
+                        <Text style={styles.menuText}>
+                            How It Works!
                         </Text>
                     </TouchableOpacity>
 
@@ -168,11 +182,12 @@ const styles = StyleSheet.create({
         borderColor: '#000',
         // borderWidth: 2.3,
         borderRadius: 20,
-        padding: 7,
+        padding: 6,
         width: 250,
         alignItems: 'center',
         elevation: 3,
-        shadowColor: '#000'
+        shadowColor: '#000',
+        // backgroundColor: '#bbb'
     },
     menuText: {
         fontSize: 18,

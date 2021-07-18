@@ -62,6 +62,7 @@ class ReportsView extends React.Component {
             reportsMenuOpen: true,
             viewHabitsOpen: false,
             viewLogsOpen: false,
+            viewTargetsOpen: false,
             dailyCoverageOpen: false,
             weeklyCoverageOpen: false,
             monthlyCoverageOpen: false,
@@ -80,6 +81,13 @@ class ReportsView extends React.Component {
         this.setState({
             reportsMenuOpen: false,
             viewLogsOpen: true,
+        });
+    };
+
+    onViewTargetsPressed  = () => {
+        this.setState({
+            reportsMenuOpen: false,
+            viewTargetsOpen: true,
         });
     };
 
@@ -111,6 +119,7 @@ class ReportsView extends React.Component {
                         onViewHabitsPressed={this.onViewHabitsPressed}
                         onCustomHabitsPressed={this.onCustomHabitsPressed}
                         onViewLogsPressed={this.onViewLogsPressed}
+                        onViewTargetsPressed={this.onViewTargetsPressed}
                         onViewPeriodicalReportPressed={this.onViewPeriodicalReportPressed}
                     />
                 </Animated.View>
@@ -183,6 +192,30 @@ class ReportsView extends React.Component {
                         data={logArray}
                         renderItem={({ item, index }) => (
                             <Text style={styles.target} key={index}> - {item.date}: {item.habit} </Text>
+                        )}
+                        keyExtractor={ ( item, index ) => `${index}` }
+                    />
+                </Animated.View>
+            );
+        }
+
+        if(this.state.viewTargetsOpen) {
+            return (
+                <Animated.View style={{opacity:this.state.fadeAnimation}}>
+                    <TouchableOpacity 
+                        style={styles.backButton} 
+                        onPress={this.closeReportAndOpenReportsMenu}
+                    >
+                        <Text style={styles.backString}>
+                            Back
+                        </Text>
+                    </TouchableOpacity>
+
+                    <FlatList 
+                        style={styles.ongoingTargetList}
+                        data={this.props.targets}
+                        renderItem={({ item, index }) => (
+                            <Text style={styles.target} key={index}> - {item.date}: For {item.duration} days - {item.habit}</Text>
                         )}
                         keyExtractor={ ( item, index ) => `${index}` }
                     />

@@ -29,6 +29,7 @@ import AddCustomHabitView from './AddCustomHabit';
 import LogHabitView from './LogHabit';
 import SetTargetView from './SetTarget';
 import ReportsView from './ReportsView';
+import GuideView from './GuideView';
 
 class App extends React.Component {
 
@@ -45,7 +46,8 @@ class App extends React.Component {
     customHabitOpen: false,
     logHabitOpen: false,
     setTargetOpen: false,
-    reportsOpen: false
+    reportsOpen: false,
+    guideOpen: false
   };
 
   async componentDidMount() {
@@ -113,7 +115,14 @@ class App extends React.Component {
   };
 
   onMenuButtonPressed = () => {
-    this.setState({menuOpen: true, customHabitOpen: false, logHabitOpen: false, setTargetOpen: false, reportsOpen: false});
+    this.setState({
+      menuOpen: true, 
+      customHabitOpen: false, 
+      logHabitOpen: false, 
+      setTargetOpen: false, 
+      reportsOpen: false,
+      guideOpen: false
+    });
   };
 
   onCloseMenuButtonPressed = () => {
@@ -134,6 +143,10 @@ class App extends React.Component {
 
   openReportsView = () => {
     this.setState({menuOpen:false, reportsOpen: true});
+  };
+
+  openGuideView = () => {
+    this.setState({menuOpen:false, guideOpen: true});
   };
 
   onAddCustomHabitButtonPressed = (habit) => {
@@ -174,7 +187,7 @@ class App extends React.Component {
             openLogHabitView={this.openLogHabitView}
             openSetTargetView={this.openSetTargetView}
             openReportsView={this.openReportsView}
-            
+            openGuideView={this.openGuideView}
           />
         </SafeAreaView>
       );
@@ -234,6 +247,17 @@ class App extends React.Component {
             score={this.state.userLog}
             onBackButtonPressed={this.onMenuButtonPressed}
             onSetTargetButtonPressed={this.onSetTargetButtonPressed}
+          />
+        </SafeAreaView>
+      );
+    }
+
+    if(this.state.guideOpen) {
+      return (
+        <SafeAreaView style={styles.safeArea}>
+          <StatusBar barStyle={'dark-content'} />
+          <GuideView 
+            onBackButtonPressed={this.onMenuButtonPressed}
           />
         </SafeAreaView>
       );

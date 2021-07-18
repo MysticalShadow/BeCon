@@ -21,7 +21,8 @@ import {
     isSunday,
     addDaysToFormattedDate,
     getLastSunday,
-    getScore
+    getScore,
+    getPreviousMonthYear
 } from '../util';
 
 class PeriodicalReportView extends React.Component {
@@ -53,10 +54,6 @@ class PeriodicalReportView extends React.Component {
         for(var i=0; i<logArray.length; i++) {
             var log = logArray[i];  
             if(currDate == "" || compareDate(log.date, currDate, true)) {
-                console.log("Daily");
-                console.log(currDate);
-                console.log(log.date);
-                console.log("-------");
                 while(currDate != "" && compareDate(log.date, currDate, true))
                 {
                     dailyReport.push({
@@ -67,24 +64,22 @@ class PeriodicalReportView extends React.Component {
                     currDate = addDaysToFormattedDate(1, currDate);
                     habits = [];
                 }
-                // if(habits.length > 0)
-                //     dailyReport.push({
-                //         date: currDate,
-                //         score: getScore(logArray.slice(0,i+1), this.props.targets, currDate),
-                //         habits: habits
-                //     });
                 habits = [];
                 currDate = log.date;
             }
             habits.push(log.habit);
         }
 
-        if(habits.length > 0)
+        while(currDate != "" && compareDate(getFormattedDate(new Date()), currDate))
+        {
             dailyReport.push({
                 date: currDate,
-                score: getCurrentScore(logArray, this.props.targets),
+                score: getScore(logArray.slice(0,i+1), this.props.targets, currDate),
                 habits: habits
             });
+            currDate = addDaysToFormattedDate(1, currDate);
+            habits = [];
+        }
         
         return dailyReport;
     };
@@ -94,39 +89,35 @@ class PeriodicalReportView extends React.Component {
         var weeklyReport = [];
         var habits = [];
         var week=1, weekDate;
-        
-        var logArray = convertLogJSONToArray(this.props.userLog);
 
-        for(var i=0; i<logArray.length; i++) {
-            var log = logArray[i];  
-            if(isSunday(log.date)) {
-                if(!weekDate)
-                    weekDate = addDaysToFormattedDate(-7, log.date);
-                if(habits.length > 0)
-                    weeklyReport.push({
-                        date: week + " ("+ weekDate + ")",
-                        score: getCurrentScore(logArray.slice(0,i), this.props.targets),
-                        habits: habits
-                    });
-                habits = [];
-                currDate = log.date;
-                week++;
-                weekDate = log.date;
-            }
-            habits.push(log.habit);
-        }
+        var dailyReport = this.getDailyReportData();
+        var cumulativeWeekScore=0, days=0, weekHistory = "";
 
-        if(habits.length > 0)
+        for(const report of dailyReport) 
         {
-            if(!weekDate)
-                weekDate = getLastSunday();
-            weeklyReport.push({
-                date: week + " (" + weekDate + ")",
-                score: getCurrentScore(logArray.slice(0,i), this.props.targets),
-                habits: habits
-            });
-        }
-            
+            if(days!=0 && isSunday(report.date))
+            {
+                weeklyReport.push({
+                    date: addDaysToFormattedDate(-7, report.date),
+                    score: Math.round((cumulativeWeekScore/days)*1e3)/1e3 ,
+                    habits: [weekHistory]
+                });
+                cumulativeWeekScore = 0;
+                days=0;
+                weekHistory = "";
+            }
+            if(weekHistory != "")
+                weekHistory += ", "
+            weekHistory = weekHistory + report.score;
+            cumulativeWeekScore += report.score;
+            days += 1;
+        }   
+
+        weeklyReport.push({
+            date: getLastSunday(),
+            score: Math.round((cumulativeWeekScore/days)*1e3)/1e3 ,
+            habits: [weekHistory]
+        });
         
         return weeklyReport;
     };
@@ -135,30 +126,60 @@ class PeriodicalReportView extends React.Component {
         var currDate = "";
         var monthlyReport = [];
         var habits = [];
-        
-        var logArray = convertLogJSONToArray(this.props.userLog);
 
-        for(var i=0; i<logArray.length; i++) {
-            var log = logArray[i];  
-            if(currDate == "" || !isMonthSame(log.date, currDate)) {
-                if(habits.length > 0)
-                    monthlyReport.push({
-                        date: currDate.slice(3,currDate.length),
-                        score: getCurrentScore(logArray.slice(0,i), this.props.targets),
-                        habits: habits
-                    });
-                habits = [];
-                currDate = log.date;
+        var dailyReport = this.getDailyReportData();
+        var cumulativeMonthScore=0, days=0, monthHistory = "";
+
+        for(const report of dailyReport) 
+        {
+            if(days!=0 && report.date.slice(0,2) == "01")
+            {
+                monthlyReport.push({
+                    date: getPreviousMonthYear(report.date),
+                    score: Math.round((cumulativeMonthScore/days)*1e3)/1e3 ,
+                    habits: [monthHistory]
+                });
+                cumulativeMonthScore = 0;
+                days=0;
+                monthHistory = "";
             }
-            habits.push(log.habit);
+            if(monthHistory != "")
+                monthHistory += ", "
+            monthHistory = monthHistory + report.score;
+            cumulativeMonthScore += report.score;
+            days += 1;
         }
 
-        if(habits.length > 0)
-            monthlyReport.push({
-                date: currDate.slice(3,currDate.length),
-                score: getCurrentScore(logArray.slice(0,i), this.props.targets),
-                habits: habits
-            });
+        var todaysDate = getFormattedDate(new Date());
+        monthlyReport.push({
+            date: todaysDate.slice(3, todaysDate.length),
+            score: Math.round((cumulativeMonthScore/days)*1e3)/1e3 ,
+            habits: [monthHistory]
+        });
+        
+        // var logArray = convertLogJSONToArray(this.props.userLog);
+
+        // for(var i=0; i<logArray.length; i++) {
+        //     var log = logArray[i];  
+        //     if(currDate == "" || !isMonthSame(log.date, currDate)) {
+        //         if(habits.length > 0)
+        //             monthlyReport.push({
+        //                 date: currDate.slice(3,currDate.length),
+        //                 score: getCurrentScore(logArray.slice(0,i), this.props.targets),
+        //                 habits: habits
+        //             });
+        //         habits = [];
+        //         currDate = log.date;
+        //     }
+        //     habits.push(log.habit);
+        // }
+
+        // if(habits.length > 0)
+        //     monthlyReport.push({
+        //         date: currDate.slice(3,currDate.length),
+        //         score: getCurrentScore(logArray.slice(0,i), this.props.targets),
+        //         habits: habits
+        //     });
         
         return monthlyReport;
     };
@@ -172,7 +193,7 @@ class PeriodicalReportView extends React.Component {
             
         if(this.props.period == "week") {
             report = this.getWeeklyReportData();
-            modifier = "Week";
+            modifier = "Week Starting";
          }
         if(this.props.period == "month") {
             report = this.getMonthlyReportData();
@@ -202,10 +223,11 @@ class PeriodicalReportView extends React.Component {
                                 style={styles.ongoingTargetList}
                                 data={item.habits}
                                 renderItem={({ item, index }) => (
-                                    <Text style={styles.target} key={index}> ---------{item} </Text>
+                                    <Text style={styles.target} key={index}> ---------  {item} </Text>
                                 )}
                                 keyExtractor={ ( item, index ) => `${index}` }
                             />
+                            
                         </>
  
                     )}

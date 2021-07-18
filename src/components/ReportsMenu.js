@@ -27,6 +27,10 @@ class ReportsMenuView extends React.Component {
         this.props.onViewLogsPressed();
     };
 
+    handleViewTargetsPressed = () => {
+        this.props.onViewTargetsPressed();
+    };
+
     handleDailyCoveragePressed = () => {
         this.props.onViewPeriodicalReportPressed("day");
     };
@@ -57,6 +61,15 @@ class ReportsMenuView extends React.Component {
                 >
                     <Text style={styles.menuText}>
                         View your Logs
+                    </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity 
+                    style={styles.menuItem}
+                    onPress={this.handleViewTargetsPressed}
+                >
+                    <Text style={styles.menuText}>
+                        View All Targets
                     </Text>
                 </TouchableOpacity>
 
