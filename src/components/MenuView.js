@@ -10,7 +10,8 @@ import {
   View,
   TouchableOpacity,
   Alert,
-  Animated
+  Animated,
+  BackHandler
 } from 'react-native';
 import { getFormattedDate } from '../util';
 
@@ -18,6 +19,14 @@ class MenuView extends React.Component {
 
     componentDidMount () {
         this.fadeIn();
+        this.backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            this.handleCloseMenuButtonPressed
+          );
+    };
+
+    componentWillUnmount() {
+        this.backHandler.remove();
     };
 
     state = {
@@ -33,7 +42,9 @@ class MenuView extends React.Component {
     };
 
     handleCloseMenuButtonPressed = () => {
+        console.log("Back handler pressed");
         this.props.onCloseMenuButtonPressed();
+        return true;
     };
 
     handleAddCustomButtonPressed = () => {

@@ -10,7 +10,8 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  Animated
+  Animated,
+  BackHandler
 } from 'react-native';
 
 import {
@@ -24,6 +25,14 @@ class ReportsView extends React.Component {
 
     componentDidMount () {
         this.fadeIn();
+        this.backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            this.handleBackButtonPressed
+          );
+    };
+
+    componentWillUnmount() {
+        this.backHandler.remove();
     };
 
     fadeIn = () => {
@@ -54,7 +63,12 @@ class ReportsView extends React.Component {
     };
 
     handleBackButtonPressed = () => {
-        this.props.onBackButtonPressed();
+        if(this.state.reportsMenuOpen)
+            this.props.onBackButtonPressed();
+        else
+            this.closeReportAndOpenReportsMenu();
+
+        return true;
     };
 
     closeReportAndOpenReportsMenu = () => {
@@ -106,15 +120,6 @@ class ReportsView extends React.Component {
         if(this.state.reportsMenuOpen) {
             return (
                 <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
-                    <TouchableOpacity 
-                        style={styles.backButton} 
-                        onPress={this.handleBackButtonPressed}
-                    >
-                        <Text style={styles.backString}>
-                            Back
-                        </Text>
-                    </TouchableOpacity>
-
                     <ReportsMenuView 
                         onViewHabitsPressed={this.onViewHabitsPressed}
                         onCustomHabitsPressed={this.onCustomHabitsPressed}
@@ -134,15 +139,6 @@ class ReportsView extends React.Component {
 
             return (
                 <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
-                    <TouchableOpacity 
-                        style={styles.backButton} 
-                        onPress={this.closeReportAndOpenReportsMenu}
-                    >
-                        <Text style={styles.backString}>
-                            Back
-                        </Text>
-                    </TouchableOpacity>
-
                     <Text style={styles.backString}>
                         Preset Habits:
                     </Text>
@@ -202,15 +198,6 @@ class ReportsView extends React.Component {
         if(this.state.viewTargetsOpen) {
             return (
                 <Animated.View style={{opacity:this.state.fadeAnimation}}>
-                    <TouchableOpacity 
-                        style={styles.backButton} 
-                        onPress={this.closeReportAndOpenReportsMenu}
-                    >
-                        <Text style={styles.backString}>
-                            Back
-                        </Text>
-                    </TouchableOpacity>
-
                     <FlatList 
                         style={styles.ongoingTargetList}
                         data={this.props.targets}
@@ -226,15 +213,6 @@ class ReportsView extends React.Component {
         if(this.state.periodicalCoverageOpen) {
             return (
                 <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
-                    <TouchableOpacity 
-                        style={styles.backButton} 
-                        onPress={this.closeReportAndOpenReportsMenu}
-                    >
-                        <Text style={styles.backString}>
-                            Back
-                        </Text>
-                    </TouchableOpacity>
-
                     <PeriodicalReportView 
                         period={this.state.period}
                         userLog={this.props.userLog}
@@ -243,19 +221,6 @@ class ReportsView extends React.Component {
                 </Animated.View>
             );
         }
-
-        return (
-            <Animated.View style={{opacity:this.state.fadeAnimation}}>
-                <TouchableOpacity 
-                    style={styles.backButton} 
-                    onPress={this.handleBackButtonPressed}
-                >
-                    <Text style={styles.backString}>
-                        Back
-                    </Text>
-                </TouchableOpacity>
-            </Animated.View>
-        );
     };
 
 

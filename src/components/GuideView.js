@@ -9,13 +9,22 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  Animated
+  Animated,
+  BackHandler
 } from 'react-native';
 
 class GuideView extends React.Component {
 
     componentDidMount () {
         this.fadeIn();
+        this.backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            this.handleBackButtonPressed
+          );
+    };
+
+    componentWillUnmount() {
+        this.backHandler.remove();
     };
 
     state = {
@@ -32,20 +41,12 @@ class GuideView extends React.Component {
 
     handleBackButtonPressed = () => {
         this.props.onBackButtonPressed();
+        return true;
     };
 
     render () {
         return (
             <Animated.View style={[{opacity:this.state.fadeAnimation, flex:1}]}>
-                <TouchableOpacity 
-                    style={styles.backButton} 
-                    onPress={this.handleBackButtonPressed}
-                >
-                    <Text style={styles.backString}>
-                        Back
-                    </Text>
-                </TouchableOpacity>
-
                 <ScrollView style={styles.helpPage}>
                     <Text style={styles.heading}>The Concept!!</Text>
                     <Text style={styles.normalText}>

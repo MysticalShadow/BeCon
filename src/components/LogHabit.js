@@ -13,7 +13,8 @@ import {
   FlatList,
   Easing,
   Alert,
-  Animated
+  Animated,
+  BackHandler
 } from 'react-native';
 
 import {
@@ -49,6 +50,14 @@ class LogHabitView extends React.Component {
 
     componentDidMount () {
         this.fadeIn();
+        this.backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            this.handleBackButtonPressed
+          );
+    };
+
+    componentWillUnmount() {
+        this.backHandler.remove();
     };
 
     fadeIn = () => {
@@ -70,6 +79,7 @@ class LogHabitView extends React.Component {
 
     handleBackButtonPressed = () => {
         this.props.onBackButtonPressed();
+        return true;
     };
 
     handleLogHabitButtonPressed = () => {
@@ -127,15 +137,6 @@ class LogHabitView extends React.Component {
         var allHabits = this.props.presetHabits.concat(this.props.customHabits);
         return (
             <Animated.View style={{flex: 1, opacity: this.state.fadeAnimation}}>
-                <TouchableOpacity 
-                    style={styles.backButton} 
-                    onPress={this.handleBackButtonPressed}
-                >
-                    <Text style={styles.backString}>
-                        Back
-                    </Text>
-                </TouchableOpacity>
-
                 <View style={{marginTop:50}}>
                     <DatePicker
                         style={styles.datePickerStyle}

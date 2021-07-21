@@ -12,13 +12,22 @@ import {
   TextInput,
   FlatList,
   Alert,
-  Animated
+  Animated,
+  BackHandler
 } from 'react-native';
 
 class AddCustomHabitView extends React.Component {
 
     componentDidMount () {
         this.fadeIn();
+        this.backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            this.handleBackButtonPressed
+          );
+    };
+
+    componentWillUnmount() {
+        this.backHandler.remove();
     };
 
     fadeIn = () => {
@@ -36,6 +45,7 @@ class AddCustomHabitView extends React.Component {
 
     handleBackButtonPressed = () => {
         this.props.onBackButtonPressed();
+        return true;
     };
 
     handleAddHabitButtonPressed = () => {
@@ -57,15 +67,6 @@ class AddCustomHabitView extends React.Component {
     render () {
         return (
             <Animated.View style={{opacity: this.state.fadeAnimation}}>
-                <TouchableOpacity 
-                    style={styles.backButton} 
-                    onPress={this.handleBackButtonPressed}
-                >
-                    <Text style={styles.backString}>
-                        Back
-                    </Text>
-                </TouchableOpacity>
-
                 <TextInput
                     ref={(inputElement) => { this.inputElement = inputElement; }}
                     onChangeText={(habitString) => this.setState({habitString})}

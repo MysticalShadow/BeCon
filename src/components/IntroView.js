@@ -39,7 +39,8 @@ class IntroView extends React.Component {
     render () {
         return (
             <Animated.View style={[styles.container, {opacity: this.state.fadeAnimation}]}>
-                <Text style={styles.appTitle}>Be-CON</Text>
+                <Text style={[styles.appTitle, {color: 'red'}]}>       Be</Text>
+                <Text style={styles.appTitle}><Text style={{color:'red'}}>       Con</Text>sistent</Text>
             </Animated.View>
         );
     }
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
     container: {
       flex:1,
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'flex-start'
     },
     appTitle: {
       fontSize: 40,

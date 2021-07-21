@@ -12,7 +12,8 @@ import {
   TextInput,
   FlatList,
   Alert,
-  Animated
+  Animated,
+  BackHandler
 } from 'react-native';
 
 import {
@@ -50,6 +51,14 @@ class SetTargetView extends React.Component {
 
     componentDidMount () {
         this.fadeIn();
+        this.backHandler = BackHandler.addEventListener(
+            "hardwareBackPress",
+            this.handleBackButtonPressed
+          );
+    };
+
+    componentWillUnmount() {
+        this.backHandler.remove();
     };
 
     fadeIn = () => {
@@ -73,6 +82,7 @@ class SetTargetView extends React.Component {
 
     handleBackButtonPressed = () => {
         this.props.onBackButtonPressed();
+        return true;
     };
 
     isHabitAlreadyTarget = () => {
@@ -190,15 +200,6 @@ class SetTargetView extends React.Component {
 
         return (
             <Animated.View style={{opacity: this.state.fadeAnimation, elevation: -1, flex:1}}>
-                <TouchableOpacity 
-                    style={styles.backButton} 
-                    onPress={this.handleBackButtonPressed}
-                >
-                    <Text style={styles.backString}>
-                        Back
-                    </Text>
-                </TouchableOpacity>
-
                 <Text style={{alignSelf:'center', fontWeight: 'bold', fontSize: 16, marginBottom: 20}}>
                     Set Target:
                 </Text>
