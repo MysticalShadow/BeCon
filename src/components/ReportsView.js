@@ -120,6 +120,9 @@ class ReportsView extends React.Component {
         if(this.state.reportsMenuOpen) {
             return (
                 <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
+                    <Text style={styles.heading}>
+                        Reports Menu
+                    </Text>
                     <ReportsMenuView 
                         onViewHabitsPressed={this.onViewHabitsPressed}
                         onCustomHabitsPressed={this.onCustomHabitsPressed}
@@ -139,7 +142,7 @@ class ReportsView extends React.Component {
 
             return (
                 <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
-                    <Text style={styles.backString}>
+                    <Text style={[styles.backString, {marginTop:10, marginLeft:10}]}>
                         Preset Habits:
                     </Text>
 
@@ -153,7 +156,7 @@ class ReportsView extends React.Component {
                         persistentScrollbar={true}
                     />
 
-                    <Text style={styles.backString}>
+                    <Text style={[styles.backString, {marginLeft:10}]}>
                         Custom Habits:
                     </Text>
 
@@ -173,18 +176,12 @@ class ReportsView extends React.Component {
         if(this.state.viewLogsOpen) {
             var logArray = convertLogJSONToArray(this.props.userLog);
             return (
-                <Animated.View style={{opacity:this.state.fadeAnimation}}>
-                    <TouchableOpacity 
-                        style={styles.backButton} 
-                        onPress={this.closeReportAndOpenReportsMenu}
-                    >
-                        <Text style={styles.backString}>
-                            Back
-                        </Text>
-                    </TouchableOpacity>
-
+                <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
+                    <Text style={styles.heading}>
+                        All Logs
+                    </Text>
                     <FlatList 
-                        style={styles.ongoingTargetList}
+                        style={styles.logsList}
                         data={logArray}
                         renderItem={({ item, index }) => (
                             <Text style={styles.target} key={index}> - {item.date}: {item.habit} </Text>
@@ -197,9 +194,12 @@ class ReportsView extends React.Component {
 
         if(this.state.viewTargetsOpen) {
             return (
-                <Animated.View style={{opacity:this.state.fadeAnimation}}>
+                <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
+                    <Text style={styles.heading}>
+                        All Targets
+                    </Text>
                     <FlatList 
-                        style={styles.ongoingTargetList}
+                        style={styles.logsList}
                         data={this.props.targets}
                         renderItem={({ item, index }) => (
                             <Text style={styles.target} key={index}> - {item.date}: For {item.duration} days - {item.habit}</Text>
@@ -245,6 +245,13 @@ const styles = StyleSheet.create({
         textShadowColor: "#111",
         textShadowRadius: 1
     },
+    heading: {
+        alignSelf:'center', 
+        fontWeight: 'bold', 
+        fontSize: 26, 
+        marginTop: 30,
+        letterSpacing: 0.7
+    },
     menuItem: {
         margin: 10,
         // marginTop: 20,
@@ -262,6 +269,13 @@ const styles = StyleSheet.create({
         padding: 2
     },
     customHabitsList: {
+        flex: 0.5,
+        borderWidth: 2,
+        margin: 10,
+        borderRadius: 6,
+        padding: 2
+    },
+    logsList: {
         flex: 0.5,
         borderWidth: 2,
         margin: 10,

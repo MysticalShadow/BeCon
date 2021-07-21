@@ -185,19 +185,22 @@ class PeriodicalReportView extends React.Component {
     };
 
     render () {
-        var report, modifier, emptyReportMessage="";
+        var report, modifier, emptyReportMessage="", heading;
         if(this.props.period == "day") {
             report = this.getDailyReportData();
             modifier = "Date";
+            heading = "Daily Report";
         }
             
         if(this.props.period == "week") {
             report = this.getWeeklyReportData();
             modifier = "Week Starting";
+            heading = "Weekly Report";
          }
         if(this.props.period == "month") {
             report = this.getMonthlyReportData();
             modifier = "Month";
+            heading = "Monthly Report";
         }
         
         if(!report || (report.length==0))
@@ -213,6 +216,9 @@ class PeriodicalReportView extends React.Component {
 
         return (
             <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
+                <Text style={styles.heading}>
+                    {heading}
+                </Text>
                 <FlatList 
                     style={styles.reportData}
                     data={report}
@@ -250,6 +256,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 6,
         padding: 5
+    },
+    heading: {
+        alignSelf:'center', 
+        fontWeight: 'bold', 
+        fontSize: 22, 
+        marginVertical: 20
     },
     menuItem: {
         margin: 10,

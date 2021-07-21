@@ -47,6 +47,9 @@ class GuideView extends React.Component {
     render () {
         return (
             <Animated.View style={[{opacity:this.state.fadeAnimation, flex:1}]}>
+                <Text style={styles.pageHeading}>
+                    How It Works!!
+                </Text>
                 <ScrollView style={styles.helpPage}>
                     <Text style={styles.heading}>The Concept!!</Text>
                     <Text style={styles.normalText}>
@@ -178,6 +181,13 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
         textShadowColor: "#111",
         textShadowRadius: 1
+    },
+    pageHeading: {
+        alignSelf:'center', 
+        fontWeight: 'bold', 
+        fontSize: 26, 
+        marginTop: 15,
+        marginBottom: 5
     },
     helpPage: {
         flex: 1, 

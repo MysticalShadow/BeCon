@@ -137,7 +137,11 @@ class LogHabitView extends React.Component {
         var allHabits = this.props.presetHabits.concat(this.props.customHabits);
         return (
             <Animated.View style={{flex: 1, opacity: this.state.fadeAnimation}}>
-                <View style={{marginTop:50}}>
+                <Text style={styles.logHabitHeading}>
+                    Log Habit
+                </Text>
+
+                <View style={{marginTop:50, justifyContent:'center'}}>
                     <DatePicker
                         style={styles.datePickerStyle}
                         date={this.state.date} // Initial date from state
@@ -220,6 +224,12 @@ const styles = StyleSheet.create({
         textShadowColor: "#111",
         textShadowRadius: 1
     },
+    logHabitHeading: {
+        alignSelf:'center', 
+        fontWeight: 'bold', 
+        fontSize: 26, 
+        marginVertical: 50
+    },
     input: {
         height: 120,
         marginHorizontal: 12,
@@ -246,9 +256,9 @@ const styles = StyleSheet.create({
     },
     datePickerStyle: {
         width: 150,
-        margin: 10,
+        // margin: 10,
         alignSelf: 'center',
-        marginBottom: 20
+        marginBottom: 10
     },
     dropdownContainer: {
         margin: 10

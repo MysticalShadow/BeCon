@@ -200,12 +200,12 @@ class SetTargetView extends React.Component {
 
         return (
             <Animated.View style={{opacity: this.state.fadeAnimation, elevation: -1, flex:1}}>
-                <Text style={{alignSelf:'center', fontWeight: 'bold', fontSize: 16, marginBottom: 20}}>
-                    Set Target:
+                <Text style={styles.setTargetHeading}>
+                    Set Target
                 </Text>
 
                 <View style={{flexDirection:'row', alignItems:'center'}}>
-                    <View style={{flex: 0.8, flexDirection: 'column', alignItems:'flex-end', justifyContent: 'space-around'}}>
+                    <View style={{flex: 0.9, flexDirection: 'column', alignItems:'flex-end', justifyContent: 'space-around'}}>
                         <Text>From: </Text>
                         <Text style={{marginTop:34, marginBottom:36}}>Duration: </Text>
                         <Text style={{marginBottom: 10}}>Target Habit: </Text>
@@ -316,6 +316,12 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
         textShadowColor: "#111",
         textShadowRadius: 1
+    },
+    setTargetHeading: {
+        alignSelf:'center', 
+        fontWeight: 'bold', 
+        fontSize: 26, 
+        marginVertical: 50
     },
     datePickerStyle: {
         width: 150,

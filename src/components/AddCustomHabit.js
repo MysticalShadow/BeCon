@@ -67,6 +67,9 @@ class AddCustomHabitView extends React.Component {
     render () {
         return (
             <Animated.View style={{opacity: this.state.fadeAnimation}}>
+                <Text style={styles.addCustomHabitHeading}>
+                    Add Custom Habit
+                </Text>
                 <TextInput
                     ref={(inputElement) => { this.inputElement = inputElement; }}
                     onChangeText={(habitString) => this.setState({habitString})}
@@ -109,6 +112,12 @@ const styles = StyleSheet.create({
         letterSpacing: 1,
         textShadowColor: "#111",
         textShadowRadius: 1
+    },
+    addCustomHabitHeading: {
+        alignSelf:'center', 
+        fontWeight: 'bold', 
+        fontSize: 26, 
+        marginVertical: 50
     },
     input: {
         height: 120,
