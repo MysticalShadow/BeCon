@@ -184,9 +184,12 @@ class LogHabitView extends React.Component {
                             itemSeparatorStyle={{
                                 backgroundColor: "#bbb",
                               }}
+                            listItemContainerStyle={{
+                                height: 50
+                            }}
                             searchable={true}
                             searchPlaceholder="Search Habit..."
-                            maxHeight={400}
+                            maxHeight={350}
                         />
                     </View>
                     

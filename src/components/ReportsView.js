@@ -20,8 +20,40 @@ import {
 
 import ReportsMenuView from './ReportsMenu';
 import PeriodicalReportView from './PeriodicalReport';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 class ReportsView extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        var items = [
+            {
+                'label':'All Habits', 'value':'All Habits'
+            },
+            {
+                'label':'All Logs', 'value':'All Logs'
+            },
+            {
+                'label':'All Targets', 'value':'All Targets'
+            },
+            {
+                'label':'Daily Coverage', 'value':'Daily Coverage'
+            },
+            {
+                'label':'Weekly Coverage', 'value':'Weekly Coverage'
+            },
+            {
+                'label':'Monthly Coverage', 'value':'Monthly Coverage'
+            }
+        ];
+    
+        this.state = {
+            pickerItems: items,
+            reportsMenuOpen: true,
+            fadeAnimation: new Animated.Value(0)
+        };
+    }
 
     componentDidMount () {
         this.fadeIn();
@@ -42,14 +74,27 @@ class ReportsView extends React.Component {
             useNativeDriver: true
         }).start();
     };
-
     fadeOutIn = () => {
         Animated.timing(this.state.fadeAnimation, {
             toValue: 0,
             duration: 0,
             useNativeDriver: true
-        }).start(() => {this.fadeIn()});
+        }).start(() => {
+            Animated.timing(this.state.fadeAnimation, {
+                toValue: 1,
+                duration: 200,
+                useNativeDriver: true
+            }).start();
+        });
     };
+
+    // fadeOutIn = () => {
+    //     Animated.timing(this.state.fadeAnimation, {
+    //         toValue: 0,
+    //         duration: 0,
+    //         useNativeDriver: true
+    //     }).start(() => {this.fadeIn()});
+    // };
 
     state = {
         reportsMenuOpen: true,
@@ -58,59 +103,89 @@ class ReportsView extends React.Component {
         weeklyCoverageOpen: false,
         monthlyCoverageOpen: false,
         periodicalCoverageOpen: false,
+        pickerOpen: false,
+        pickerValue: null,
+        pickerItems: [],
         period: "",
         fadeAnimation: new Animated.Value(0)
     };
 
     handleBackButtonPressed = () => {
-        if(this.state.reportsMenuOpen)
-            this.props.onBackButtonPressed();
-        else
-            this.closeReportAndOpenReportsMenu();
-
+        this.props.onBackButtonPressed();
         return true;
     };
 
-    closeReportAndOpenReportsMenu = () => {
+    setOpen = (pickerOpen) => {
         this.setState({
-            reportsMenuOpen: true,
-            viewHabitsOpen: false,
-            viewLogsOpen: false,
-            viewTargetsOpen: false,
-            dailyCoverageOpen: false,
-            weeklyCoverageOpen: false,
-            monthlyCoverageOpen: false,
-            periodicalCoverageOpen: false,
+          pickerOpen
         });
+    };
+    
+    setValue = (callback) => {
+        this.setState(state => ({
+            pickerValue: callback(state.pickerValue)
+        }));
+        this.fadeOutIn();
+        if(callback(this.state.pickerValue) == "All Habits")
+            this.onViewHabitsPressed();
+        if(callback(this.state.pickerValue) == "All Logs")
+            this.onViewLogsPressed();
+        if(callback(this.state.pickerValue) == "All Targets")
+            this.onViewTargetsPressed();
+        if(callback(this.state.pickerValue) == "All Targets")
+            this.onViewTargetsPressed();
+        if(callback(this.state.pickerValue) == "Daily Coverage")
+            this.onViewPeriodicalReportPressed("day");
+        if(callback(this.state.pickerValue) == "Weekly Coverage")
+            this.onViewPeriodicalReportPressed("week");
+        if(callback(this.state.pickerValue) == "Monthly Coverage")
+            this.onViewPeriodicalReportPressed("month");
+    };
+
+    setItems = (callback) => {
+        this.setState(state => ({
+            pickerItems: callback(state.pickerItems)
+        }));
     };
 
     onViewHabitsPressed = () => {
         this.setState({
             reportsMenuOpen: false,
             viewHabitsOpen: true,
+            viewLogsOpen: false,
+            viewTargetsOpen: false,
+            periodicalCoverageOpen: false,
         });
     };
 
     onViewLogsPressed  = () => {
         this.setState({
             reportsMenuOpen: false,
+            viewHabitsOpen: false,
             viewLogsOpen: true,
+            viewTargetsOpen: false,
+            periodicalCoverageOpen: false,
         });
     };
 
     onViewTargetsPressed  = () => {
         this.setState({
             reportsMenuOpen: false,
+            viewHabitsOpen: false,
+            viewLogsOpen: false,
             viewTargetsOpen: true,
+            periodicalCoverageOpen: false,
         });
     };
 
     onViewPeriodicalReportPressed = (period) => {
-        this.fadeOutIn();
         this.setState({
             reportsMenuOpen: false,
             periodicalCoverageOpen: true,
-            period: period
+            period: period,
+            viewHabitsOpen: false,
+            viewLogsOpen: false,
+            viewTargetsOpen: false
         });
     };
 
@@ -120,16 +195,34 @@ class ReportsView extends React.Component {
         if(this.state.reportsMenuOpen) {
             return (
                 <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
-                    <Text style={styles.heading}>
-                        Reports Menu
-                    </Text>
-                    <ReportsMenuView 
-                        onViewHabitsPressed={this.onViewHabitsPressed}
-                        onCustomHabitsPressed={this.onCustomHabitsPressed}
-                        onViewLogsPressed={this.onViewLogsPressed}
-                        onViewTargetsPressed={this.onViewTargetsPressed}
-                        onViewPeriodicalReportPressed={this.onViewPeriodicalReportPressed}
-                    />
+                    <View style={styles.dropdownContainer}>
+                        <DropDownPicker
+                            open={this.state.pickerOpen}
+                            value={this.state.pickerValue}
+                            items={this.state.pickerItems}
+                            setOpen={this.setOpen}
+                            setValue={this.setValue}
+                            setItems={this.setItems}
+                            placeholder= "Select an option..."
+                            textStyle={{
+                                fontSize: 16,
+                            }}
+                            itemSeparator={true}
+                            itemSeparatorStyle={{
+                                backgroundColor: "#bbb",
+                              }}
+                            listItemContainerStyle={{
+                                height: 50
+                            }}
+                            maxHeight={350}
+                        />
+                    </View>
+                    <View style={{flex:1, justifyContent:'center', alignItems:'center'}}>
+                        <Text style={{fontSize:18}}>
+                            Select an option above to see reports.
+                        </Text>
+                    </View>
+                    
                 </Animated.View>
             );
         }
@@ -142,6 +235,29 @@ class ReportsView extends React.Component {
 
             return (
                 <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
+                    <View style={styles.dropdownContainer}>
+                        <DropDownPicker
+                            open={this.state.pickerOpen}
+                            value={this.state.pickerValue}
+                            items={this.state.pickerItems}
+                            setOpen={this.setOpen}
+                            setValue={this.setValue}
+                            setItems={this.setItems}
+                            placeholder= "All Habits"
+                            textStyle={{
+                                fontSize: 16,
+                            }}
+                            itemSeparator={true}
+                            itemSeparatorStyle={{
+                                backgroundColor: "#bbb",
+                              }}
+                            listItemContainerStyle={{
+                                height: 50
+                            }}
+                            maxHeight={350}
+                        />
+                    </View>
+
                     <Text style={[styles.backString, {marginTop:10, marginLeft:10}]}>
                         Preset Habits:
                     </Text>
@@ -177,6 +293,30 @@ class ReportsView extends React.Component {
             var logArray = convertLogJSONToArray(this.props.userLog);
             return (
                 <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
+                    
+                    <View style={styles.dropdownContainer}>
+                        <DropDownPicker
+                            open={this.state.pickerOpen}
+                            value={this.state.pickerValue}
+                            items={this.state.pickerItems}
+                            setOpen={this.setOpen}
+                            setValue={this.setValue}
+                            setItems={this.setItems}
+                            placeholder= "Select an option..."
+                            textStyle={{
+                                fontSize: 16,
+                            }}
+                            itemSeparator={true}
+                            itemSeparatorStyle={{
+                                backgroundColor: "#bbb",
+                              }}
+                            listItemContainerStyle={{
+                                height: 50
+                            }}
+                            maxHeight={350}
+                        />
+                    </View>
+                    
                     <Text style={styles.heading}>
                         All Logs
                     </Text>
@@ -195,6 +335,28 @@ class ReportsView extends React.Component {
         if(this.state.viewTargetsOpen) {
             return (
                 <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
+                    <View style={styles.dropdownContainer}>
+                        <DropDownPicker
+                            open={this.state.pickerOpen}
+                            value={this.state.pickerValue}
+                            items={this.state.pickerItems}
+                            setOpen={this.setOpen}
+                            setValue={this.setValue}
+                            setItems={this.setItems}
+                            placeholder= "Select an option..."
+                            textStyle={{
+                                fontSize: 16,
+                            }}
+                            itemSeparator={true}
+                            itemSeparatorStyle={{
+                                backgroundColor: "#bbb",
+                              }}
+                            listItemContainerStyle={{
+                                height: 50
+                            }}
+                            maxHeight={350}
+                        />
+                    </View>
                     <Text style={styles.heading}>
                         All Targets
                     </Text>
@@ -213,6 +375,28 @@ class ReportsView extends React.Component {
         if(this.state.periodicalCoverageOpen) {
             return (
                 <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
+                    <View style={styles.dropdownContainer}>
+                        <DropDownPicker
+                            open={this.state.pickerOpen}
+                            value={this.state.pickerValue}
+                            items={this.state.pickerItems}
+                            setOpen={this.setOpen}
+                            setValue={this.setValue}
+                            setItems={this.setItems}
+                            placeholder= "Select an option..."
+                            textStyle={{
+                                fontSize: 16,
+                            }}
+                            itemSeparator={true}
+                            itemSeparatorStyle={{
+                                backgroundColor: "#bbb",
+                              }}
+                            listItemContainerStyle={{
+                                height: 50
+                            }}
+                            maxHeight={350}
+                        />
+                    </View>
                     <PeriodicalReportView 
                         period={this.state.period}
                         userLog={this.props.userLog}
@@ -248,8 +432,8 @@ const styles = StyleSheet.create({
     heading: {
         alignSelf:'center', 
         fontWeight: 'bold', 
-        fontSize: 26, 
-        marginTop: 30,
+        fontSize: 22, 
+        marginTop: 20,
         letterSpacing: 0.7
     },
     menuItem: {
@@ -281,6 +465,12 @@ const styles = StyleSheet.create({
         margin: 10,
         borderRadius: 6,
         padding: 2
+    },
+    dropdownContainer: {
+        margin: 10,
+        marginTop: 15,
+        width: 200,
+        alignSelf: 'center'
     },
 });
 

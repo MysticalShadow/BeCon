@@ -67,6 +67,14 @@ class GuideView extends React.Component {
                         section for details). 
                     </Text>
 
+                    <View style={{
+                            borderBottomColor: 'black',
+                            borderBottomWidth: 1,
+                            marginTop: 35,
+                            marginBottom: 20,
+                            marginHorizontal: 80
+                    }}/>
+
                     <Text style={styles.heading}>
                         Features:
                     </Text>
@@ -107,6 +115,14 @@ class GuideView extends React.Component {
                     <Text style={styles.normalText}>
                         <Text style={styles.subheading}>c.)</Text> Keeping you motivated to be a better person, every single day.
                     </Text>
+
+                    <View style={{
+                            borderBottomColor: 'black',
+                            borderBottomWidth: 1,
+                            marginTop: 35,
+                            marginBottom: 20,
+                            marginHorizontal: 80
+                    }}/>
 
                     <Text style={styles.heading}>Scoring: </Text>
                     <Text style={styles.normalText}>

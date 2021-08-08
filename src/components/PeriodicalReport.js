@@ -38,7 +38,7 @@ class PeriodicalReportView extends React.Component {
     fadeIn = () => {
         Animated.timing(this.state.fadeAnimation, {
             toValue: 1,
-            duration: 1000,
+            duration: 200,
             useNativeDriver: true
         }).start();
     };
@@ -157,30 +157,6 @@ class PeriodicalReportView extends React.Component {
             habits: [monthHistory]
         });
         
-        // var logArray = convertLogJSONToArray(this.props.userLog);
-
-        // for(var i=0; i<logArray.length; i++) {
-        //     var log = logArray[i];  
-        //     if(currDate == "" || !isMonthSame(log.date, currDate)) {
-        //         if(habits.length > 0)
-        //             monthlyReport.push({
-        //                 date: currDate.slice(3,currDate.length),
-        //                 score: getCurrentScore(logArray.slice(0,i), this.props.targets),
-        //                 habits: habits
-        //             });
-        //         habits = [];
-        //         currDate = log.date;
-        //     }
-        //     habits.push(log.habit);
-        // }
-
-        // if(habits.length > 0)
-        //     monthlyReport.push({
-        //         date: currDate.slice(3,currDate.length),
-        //         score: getCurrentScore(logArray.slice(0,i), this.props.targets),
-        //         habits: habits
-        //     });
-        
         return monthlyReport;
     };
 
@@ -261,7 +237,7 @@ const styles = StyleSheet.create({
         alignSelf:'center', 
         fontWeight: 'bold', 
         fontSize: 22, 
-        marginVertical: 20
+        marginTop: 20
     },
     menuItem: {
         margin: 10,

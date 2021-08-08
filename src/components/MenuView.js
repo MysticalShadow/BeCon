@@ -188,17 +188,18 @@ const styles = StyleSheet.create({
         marginBottom:80
     },
     menuItem: {
-        margin: 10,
+        margin: 2,
         // marginTop: 20,
         borderColor: '#000',
         // borderWidth: 2.3,
-        borderRadius: 20,
+        // borderRadius: 20,
         padding: 6,
-        width: 250,
+        alignSelf: 'stretch',
         alignItems: 'center',
-        elevation: 3,
-        shadowColor: '#000',
-        // backgroundColor: '#bbb'
+        paddingVertical: 8,
+        // elevation: 3,
+        // shadowColor: '#000',
+        backgroundColor: '#e7f5fe'
     },
     menuText: {
         fontSize: 18,

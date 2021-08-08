@@ -207,8 +207,8 @@ class SetTargetView extends React.Component {
                 <View style={{flexDirection:'row', alignItems:'center'}}>
                     <View style={{flex: 0.9, flexDirection: 'column', alignItems:'flex-end', justifyContent: 'space-around'}}>
                         <Text>From: </Text>
-                        <Text style={{marginTop:34, marginBottom:36}}>Duration: </Text>
-                        <Text style={{marginBottom: 10}}>Target Habit: </Text>
+                        <Text style={{marginTop:35, marginBottom:40}}>Duration: </Text>
+                        <Text style={{marginBottom:10}}>Target Habit: </Text>
                     </View>
 
                     <View style={{flex: 2, alignItems:'flex-start'}}>
@@ -250,6 +250,7 @@ class SetTargetView extends React.Component {
                                 placeholder=" (Should be more than 1) "
                                 style={styles.duration}
                                 value={this.state.duration}
+                                placeholderTextColor = 'black'
                             />
                         </View>
                         <View style={{ alignItems:'center'}}>
@@ -269,10 +270,12 @@ class SetTargetView extends React.Component {
                                     itemSeparatorStyle={{
                                         backgroundColor: "#bbb",
                                     }}
-                                                                        
+                                    listItemContainerStyle={{
+                                        height: 50
+                                    }}                              
                                     searchable={true}
                                     searchPlaceholder="Search Habit..."
-                                    maxHeight={400}
+                                    maxHeight={350}
                                 />
                             </View>
                         </View>

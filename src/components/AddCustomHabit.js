@@ -76,6 +76,7 @@ class AddCustomHabitView extends React.Component {
                     multiline={true}
                     placeholder="Type Custom Habit Here..."
                     style={styles.input}
+                    placeholderTextColor = 'black'
                 />
 
                 <TouchableOpacity 
