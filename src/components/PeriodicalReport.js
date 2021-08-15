@@ -10,8 +10,17 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  Animated
+  Animated,
+  Dimensions
 } from 'react-native';
+import {
+    LineChart,
+    BarChart,
+    PieChart,
+    ProgressChart,
+    ContributionGraph,
+    StackedBarChart
+} from "react-native-chart-kit";
 import { 
     getFormattedDate,
     compareDate,
@@ -160,10 +169,43 @@ class PeriodicalReportView extends React.Component {
         return monthlyReport;
     };
 
+    getAllScores = () => {
+        var currDate = "";
+        var dailyReport = {
+            date: [],
+            score: []
+        };
+        
+        var logArray = convertLogJSONToArray(this.props.userLog);
+
+        for(var i=0; i<logArray.length; i++) {
+            var log = logArray[i];  
+            if(currDate == "" || compareDate(log.date, currDate, true)) {
+                while(currDate != "" && compareDate(log.date, currDate, true))
+                {
+                    dailyReport.date.push(currDate);
+                    dailyReport.score.push(getScore(logArray.slice(0,i+1), this.props.targets, currDate));
+                    currDate = addDaysToFormattedDate(1, currDate);
+                }
+                currDate = log.date;
+            }
+        }
+
+        while(currDate != "" && compareDate(getFormattedDate(new Date()), currDate))
+        {
+            dailyReport.date.push(currDate);
+            dailyReport.score.push(getScore(logArray.slice(0,i+1), this.props.targets, currDate));
+            currDate = addDaysToFormattedDate(1, currDate);
+        }
+        
+        return dailyReport;
+    };
+
     render () {
-        var report, modifier, emptyReportMessage="", heading;
+        var report, modifier, emptyReportMessage="", heading, chartData;
         if(this.props.period == "day") {
             report = this.getDailyReportData();
+            chartData = this.getAllScores();
             modifier = "Date";
             heading = "Daily Report";
         }
@@ -187,8 +229,72 @@ class PeriodicalReportView extends React.Component {
                     <Text style={[styles.reportData, {flex:1, paddingTop:10}]}>{emptyReportMessage}</Text>
                 </View>
             );
-
         }
+
+        // const screenWidth = Dimensions.get("window").width;
+
+        // const maxScoreVal = Math.max(...chartData.score.map(o => o), 0);
+        // const dummyData = {
+        //     labels: [""],
+        //     datasets: [
+        //         {
+        //             data: [Math.ceil(maxScoreVal)]
+        //         }
+        //     ]
+        // };
+
+        // const data = {
+        //     labels: ["", ...chartData.date],
+        //     datasets: [
+        //       {
+        //         data: [Math.ceil(maxScoreVal), ...chartData.score],
+        //         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+        //         strokeWidth: 2 // optional
+        //       }
+        //     ]
+        // };
+
+        // const chartConfig = {
+        //     backgroundGradientFrom: "#e7f5fe",
+        //     backgroundGradientFromOpacity: 1,
+        //     backgroundGradientTo: "#e7f5fe",
+        //     backgroundGradientToOpacity: 1,
+        //     color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+        //     barPercentage: 0.5,
+        //   };
+
+        // return (
+        //     <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
+        //         <Text style={styles.heading}>
+        //             {heading}
+        //         </Text>
+        //         <View style={{margin:0, marginLeft:0}}>
+        //         <ScrollView style={{position:"absolute", left:-33, width:screenWidth+33}} horizontal={true}>
+        //         <LineChart
+        //             data={data}
+        //             width={chartData.date.length*35}
+        //             height={500}
+        //             chartConfig={chartConfig}
+        //             fromZero={true}
+        //             segments={Math.ceil(Math.max(...chartData.score.map(o => o), 0))}
+        //             bezier
+        //             verticalLabelRotation={30}
+        //         />
+        //         </ScrollView>
+                
+        //         <LineChart
+        //             data={dummyData}
+        //             width={60}
+        //             height={501}
+        //             chartConfig={chartConfig}
+        //             fromZero={true}
+        //             segments={Math.ceil(Math.max(...chartData.score.map(o => o), 0))}
+        //             style={{position:"absolute"}}
+        //             getDotColor={(dataPoint, dataPointIndex)=>{return '#08130D';}}
+        //         />
+        //         </View>
+        //     </Animated.View>
+        // );
 
         return (
             <Animated.View style={{flex:1, opacity:this.state.fadeAnimation}}>
@@ -196,6 +302,7 @@ class PeriodicalReportView extends React.Component {
                     {heading}
                 </Text>
                 <FlatList 
+                    contentContainerStyle={{ paddingBottom: 20 }}
                     style={styles.reportData}
                     data={report}
                     renderItem={({ item, index }) => (
@@ -248,11 +355,13 @@ const styles = StyleSheet.create({
         width: 200
     },
     reportData: {
+        flexGrow:1,
         borderWidth: 2,
         margin: 10,
         marginBottom: 14,
         borderRadius: 6,
-        padding: 2
+        padding: 2,
+        paddingBottom:50
     }
 });
 

@@ -263,6 +263,7 @@ class ReportsView extends React.Component {
                     </Text>
 
                     <FlatList 
+                        contentContainerStyle={{ paddingBottom: 20 }}
                         style={styles.presetHabitsList}
                         data={this.props.presetHabits}
                         renderItem={({ item, index }) => (
@@ -277,6 +278,7 @@ class ReportsView extends React.Component {
                     </Text>
 
                     <FlatList 
+                        contentContainerStyle={{ paddingBottom: 20 }}
                         style={styles.customHabitsList}
                         data={this.props.customHabits}
                         renderItem={({ item, index }) => (
@@ -321,6 +323,7 @@ class ReportsView extends React.Component {
                         All Logs
                     </Text>
                     <FlatList 
+                        contentContainerStyle={{ paddingBottom: 20 }}
                         style={styles.logsList}
                         data={logArray}
                         renderItem={({ item, index }) => (
@@ -361,6 +364,7 @@ class ReportsView extends React.Component {
                         All Targets
                     </Text>
                     <FlatList 
+                        contentContainerStyle={{ paddingBottom: 20 }}
                         style={styles.logsList}
                         data={this.props.targets}
                         renderItem={({ item, index }) => (

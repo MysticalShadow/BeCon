@@ -92,6 +92,20 @@ class LogHabitView extends React.Component {
         if(log[logItem.date] == undefined) {
             log[logItem.date] = {habits:[logItem.habit]};
         }
+        else if (log[logItem.date].habits.includes(logItem.habit)) {
+            Alert.alert(
+                "Habit Already Logged!",
+                "You have already logged this habit for today!",
+                [
+                  {
+                    text: "OK",
+                    onPress: () => {},
+                  },
+                ],
+                { cancelable: false }
+              );
+            return;
+        }
         else {
             log[logItem.date].habits.push(logItem.habit);
         }
