@@ -66,10 +66,18 @@ class AddCustomHabitView extends React.Component {
 
     render () {
         return (
-            <Animated.View style={{opacity: this.state.fadeAnimation}}>
+            <Animated.View style={{flex:1, opacity: this.state.fadeAnimation}}>
                 <Text style={styles.addCustomHabitHeading}>
                     Add Custom Habit
                 </Text>
+
+                <View style={{
+                    borderBottomColor: 'black',
+                    borderBottomWidth: 1,
+                    marginTop:5
+                }}/>
+
+                <View style={{flex:0.8, justifyContent:'center'}}>
                 <TextInput
                     ref={(inputElement) => { this.inputElement = inputElement; }}
                     onChangeText={(habitString) => this.setState({habitString})}
@@ -87,6 +95,7 @@ class AddCustomHabitView extends React.Component {
                         Add Habit
                     </Text>
                 </TouchableOpacity>
+                </View>
                 
             </Animated.View>
         );
@@ -118,9 +127,11 @@ const styles = StyleSheet.create({
         alignSelf:'center', 
         fontWeight: 'bold', 
         fontSize: 26, 
-        marginVertical: 50
+        marginTop: 15
     },
     input: {
+        flex:0.6,
+        justifyContent:'center',
         height: 120,
         marginHorizontal: 12,
         marginTop: 40,

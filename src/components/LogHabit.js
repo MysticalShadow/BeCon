@@ -222,7 +222,13 @@ class LogHabitView extends React.Component {
                     Log Habit
                 </Text>
 
-                <View style={{marginTop:50, justifyContent:'center'}}>
+                <View style={{
+                        borderBottomColor: 'black',
+                        borderBottomWidth: 1,
+                        marginTop:5
+                }}/>
+
+                <View style={{flex:1, justifyContent:'center'}}>
                     <DatePicker
                         style={styles.datePickerStyle}
                         date={this.state.date} // Initial date from state
@@ -271,8 +277,9 @@ class LogHabitView extends React.Component {
                             maxHeight={350}
                         />
                     </View>
-                    
-                    <View style={{flexDirection:'row', justifyContent:'center'}}>
+                </View>
+
+                <View style={{flexDirection:'row', justifyContent:'center', marginBottom:30}}>
                         <Switch
                             trackColor={{false: 'green', true: 'red'}}
                             thumbColor="white"
@@ -289,8 +296,7 @@ class LogHabitView extends React.Component {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    
-                </View>
+                
             </Animated.View>
         );
     };
@@ -320,7 +326,7 @@ const styles = StyleSheet.create({
         alignSelf:'center', 
         fontWeight: 'bold', 
         fontSize: 26, 
-        marginVertical: 50
+        marginTop: 15
     },
     unlogToggle: {
         alignSelf: 'center',
