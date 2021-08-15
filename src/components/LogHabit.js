@@ -86,12 +86,27 @@ class LogHabitView extends React.Component {
         return true;
     };
 
+    showInvalidInputPrompt = () => {
+        Alert.alert(
+            "Invalid Input!!",
+            "Please select the habit from dropdown menu to log.",
+            [
+                { text: "OK" }
+            ]
+        );
+    };
+
     handleLogHabitButtonPressed = () => {
         var log = this.props.userLog;
         var logItem = {
             habit: this.state.habitPickerValue,
             date: this.state.date
         };
+
+        if(logItem.habit == undefined) {
+            this.showInvalidInputPrompt();
+            return;
+        }
 
         if(this.state.unlogToggle) {
             let prevHabits = log[logItem.date].habits;
@@ -228,7 +243,7 @@ class LogHabitView extends React.Component {
                         marginTop:5
                 }}/>
 
-                <View style={{flex:1, justifyContent:'center'}}>
+                <View style={{flex:1, justifyContent:'center', marginBottom:60}}>
                     <DatePicker
                         style={styles.datePickerStyle}
                         date={this.state.date} // Initial date from state
@@ -274,7 +289,7 @@ class LogHabitView extends React.Component {
                             }}
                             searchable={true}
                             searchPlaceholder="Search Habit..."
-                            maxHeight={350}
+                            maxHeight={300}
                         />
                     </View>
                 </View>
@@ -364,7 +379,8 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     dropdownContainer: {
-        margin: 10
+        margin: 10,
+        // flex:1
     }
 });
 

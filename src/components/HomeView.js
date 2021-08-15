@@ -11,10 +11,13 @@ import {
   View,
   TouchableOpacity,
   FlatList,
-  Animated
+  Animated,
+  Image,
+  Alert
 } from 'react-native';
 
 import {
+    getFormattedDate,
     getOngoingTargets,
     getTodaysTargets,
     isTodaysTargetsCompleted
@@ -51,9 +54,21 @@ class HomeView extends React.Component {
 
     render () {
         const currConsistency = this.props.score;
-        var emptyTargets = [], ongoingTargets = [], todaysTargets = [];
+        var emptyTargets = [], ongoingTargets = [], todaysTargets = [], completed = [];
 
         todaysTargets = getTodaysTargets(this.props.targets, this.props.userLog);
+
+        let date = getFormattedDate(new Date());
+        for (const target of todaysTargets) {
+            if(this.props.userLog.hasOwnProperty(date) && this.props.userLog[date].habits.includes(target.habit))
+            {
+                completed.push(true);
+            }
+            else
+            {
+                completed.push(false);
+            }
+        }
         if (todaysTargets.length > 0 && isTodaysTargetsCompleted(this.props.targets, this.props.userLog))
         {
             emptyTargets.push("Amazing!!");
@@ -86,7 +101,18 @@ class HomeView extends React.Component {
                             style={styles.ongoingTargetList}
                             data={todaysTargets}
                             renderItem={({ item, index }) => (
-                                <Text style={styles.target} key={index}> - {item.habit} </Text>
+                                <Text 
+                                    style={styles.target} 
+                                    key={index}> - {item.habit + " "} 
+                                    {completed[index] 
+                                        ? <Image 
+                                            style={{height:20, width:20, resizeMode:'stretch'}} 
+                                            source={require('../images/green-tick.png')}/> 
+                                        : <Image 
+                                            style={{tintColor:'grey', height:20, width:20, resizeMode:'stretch'}} 
+                                            source={require('../images/green-tick.png')}/>
+                                    }
+                                </Text>
                             )}
                             keyExtractor={ ( item, index ) => `${index}` }
                         />
@@ -160,7 +186,19 @@ const styles = StyleSheet.create({
       fontSize: 40,
       fontWeight: '700',
       // flex:1
-    }
+    },
+    doneButton: {
+        alignSelf: 'center',
+        justifyContent:'center',
+        marginLeft: 10,
+        marginTop:10,
+        marginBottom:0,
+        borderColor: '#000',
+        borderWidth: 0.7,
+        borderRadius: 10,
+        padding: 1,
+        paddingHorizontal: 8
+    },
   });
   
   export default HomeView;

@@ -42,7 +42,6 @@ class MenuView extends React.Component {
     };
 
     handleCloseMenuButtonPressed = () => {
-        console.log("Back handler pressed");
         this.props.onCloseMenuButtonPressed();
         return true;
     };

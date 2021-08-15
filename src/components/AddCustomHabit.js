@@ -53,7 +53,7 @@ class AddCustomHabitView extends React.Component {
         this.inputElement.clear();
         Alert.alert(
             "Custom Habit Added!!",
-            "You can view Custom habits in Menu->Reports!",
+            "You can view Custom habits in Menu->Reports->All Habits!",
             [
               {
                 text: "OK",

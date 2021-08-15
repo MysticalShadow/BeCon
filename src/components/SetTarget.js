@@ -282,7 +282,7 @@ class SetTargetView extends React.Component {
                                         }}                              
                                         searchable={true}
                                         searchPlaceholder="Search Habit..."
-                                        maxHeight={350}
+                                        // maxHeight={350}
                                     />
                                 </View>
                             </View>
