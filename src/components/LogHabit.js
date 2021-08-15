@@ -14,7 +14,8 @@ import {
   Easing,
   Alert,
   Animated,
-  BackHandler
+  BackHandler,
+  Switch
 } from 'react-native';
 
 import {
@@ -40,11 +41,14 @@ class LogHabitView extends React.Component {
         {
             items.push({'label':habit, 'value':habit});
         }
+
+        this.allHabits = items;
     
         this.state = {
             habitPickerItems: items,
             date: getFormattedDate(new Date()),
             fadeAnimation: new Animated.Value(0),
+            unlogToggle: false
         };
     }
 
@@ -83,19 +87,22 @@ class LogHabitView extends React.Component {
     };
 
     handleLogHabitButtonPressed = () => {
+        var log = this.props.userLog;
         var logItem = {
             habit: this.state.habitPickerValue,
             date: this.state.date
         };
-        var log = this.props.userLog;
-        
-        if(log[logItem.date] == undefined) {
-            log[logItem.date] = {habits:[logItem.habit]};
-        }
-        else if (log[logItem.date].habits.includes(logItem.habit)) {
+
+        if(this.state.unlogToggle) {
+            let prevHabits = log[logItem.date].habits;
+            let newHabits = prevHabits.filter(habit => habit !== logItem.habit);
+            log[logItem.date].habits = newHabits;
+
+            this.props.onLogHabitButtonPressed(log);
+
             Alert.alert(
-                "Habit Already Logged!",
-                "You have already logged this habit for today!",
+                "Habit Unlogged!!",
+                "Habit entry for selected date is removed from logs!",
                 [
                   {
                     text: "OK",
@@ -104,29 +111,89 @@ class LogHabitView extends React.Component {
                 ],
                 { cancelable: false }
               );
-            return;
         }
         else {
-            log[logItem.date].habits.push(logItem.habit);
+            if(log[logItem.date] == undefined) {
+                log[logItem.date] = {habits:[logItem.habit]};
+            }
+            else if (log[logItem.date].habits.includes(logItem.habit)) {
+                Alert.alert(
+                    "Habit Already Logged!",
+                    "You have already logged this habit for today!",
+                    [
+                      {
+                        text: "OK",
+                        onPress: () => {},
+                      },
+                    ],
+                    { cancelable: false }
+                  );
+                return;
+            }
+            else {
+                log[logItem.date].habits.push(logItem.habit);
+            }
+    
+            this.props.onLogHabitButtonPressed(log);
+            Alert.alert(
+                "Habit Logged!!",
+                "Good Job! Keep going!",
+                [
+                  {
+                    text: "OK",
+                    onPress: () => {},
+                  },
+                ],
+                { cancelable: false }
+              );
         }
-
-        this.props.onLogHabitButtonPressed(log);
-        Alert.alert(
-            "Habit Logged!!",
-            "Good Job! Keep going!",
-            [
-              {
-                text: "OK",
-                onPress: () => {},
-              },
-            ],
-            { cancelable: false }
-          );
+        
         this.setState({
             habitPickerValue: null,
+            unlogToggle: false,
             date: getFormattedDate(new Date())
         });
     };
+
+    onUnlogTogglePress = (value) => {
+        this.refreshHabitPickerList(value, this.state.date);
+    };
+
+    onDateChange  = (date) => {
+        this.refreshHabitPickerList(this.state.unlogToggle, date);
+    }
+
+    refreshHabitPickerList = (unlogToggle, date) => {
+        if(!unlogToggle) {
+            this.setState({
+                unlogToggle,
+                date,
+                habitPickerItems: this.allHabits,
+                habitPickerValue: null,
+                habitPickerOpen: false
+            });
+            return;
+        }
+
+        let unloggableHabits = [];
+        if(this.props.userLog && this.props.userLog.hasOwnProperty(date) &&
+            this.props.userLog[date]) {
+                for (const habit of this.props.userLog[date].habits) {
+                    unloggableHabits.push({'label':habit, 'value':habit});
+                }
+        }
+
+        this.setState({
+            unlogToggle,
+            date,
+            habitPickerItems: unloggableHabits,
+            habitPickerValue: null,
+            habitPickerOpen: false
+        });
+        return;
+    };
+
+
 
     setOpen = (habitPickerOpen) => {
         this.setState({
@@ -177,9 +244,7 @@ class LogHabitView extends React.Component {
                                 borderRadius: 5,
                             },
                         }}
-                        onDateChange={(date) => {
-                            this.setState({date});
-                        }}
+                        onDateChange={(date) => this.onDateChange(date)}
                     />
 
                     <View style={styles.dropdownContainer}>
@@ -207,14 +272,24 @@ class LogHabitView extends React.Component {
                         />
                     </View>
                     
-                    <TouchableOpacity 
-                        style={styles.logHabitButton}
-                        onPress={this.handleLogHabitButtonPressed}
-                    >
-                        <Text style={styles.logHabitString}>
-                            Log Habit
-                        </Text>
-                    </TouchableOpacity>
+                    <View style={{flexDirection:'row', justifyContent:'center'}}>
+                        <Switch
+                            trackColor={{false: 'green', true: 'red'}}
+                            thumbColor="white"
+                            onValueChange={(value) => this.onUnlogTogglePress(value)}
+                            value={this.state.unlogToggle}
+                            style={styles.unlogToggle}
+                        />
+                        <TouchableOpacity 
+                            style={styles.logHabitButton}
+                            onPress={this.handleLogHabitButtonPressed}
+                        >
+                            <Text style={styles.logHabitString}>
+                                {this.state.unlogToggle ? 'Unlog Habit' : 'Log Habit'}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    
                 </View>
             </Animated.View>
         );
@@ -247,6 +322,10 @@ const styles = StyleSheet.create({
         fontSize: 26, 
         marginVertical: 50
     },
+    unlogToggle: {
+        alignSelf: 'center',
+        transform: [{ scaleX: 1.2}, { scaleY: 1.1 }]
+    },
     input: {
         height: 120,
         marginHorizontal: 12,
@@ -264,16 +343,17 @@ const styles = StyleSheet.create({
         borderRadius: 63,
         padding: 7,
         paddingHorizontal: 10,
-        elevation: -3
+        elevation: -3,
+        width: 130
     },
     logHabitString: {
         fontSize: 17,
         textShadowColor: "#111",
-        textShadowRadius: 0.5
+        textShadowRadius: 0.5,
+        alignSelf: 'center'
     },
     datePickerStyle: {
         width: 150,
-        // margin: 10,
         alignSelf: 'center',
         marginBottom: 10
     },
